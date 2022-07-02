@@ -1,11 +1,11 @@
 CC		= gcc
-CFLAGS	= -Werror -Wextra -Wall
+CFLAGS	= -pthread
 NAME	= philo
 
 SRC_PATH = sources/
 OBJ_PATH = objects/
 
-SRC		= main.c
+SRC		= philo.c parsing.c write_output.c time.c routines.c
 SRCS	= $(addprefix $(SRC_PATH), $(SRC))
 OBJ		= $(SRC:.c=.o)
 OBJS	= $(addprefix $(OBJ_PATH), $(OBJ))
