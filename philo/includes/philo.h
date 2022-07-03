@@ -6,7 +6,7 @@
 /*   By: mcombeau <mcombeau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/29 11:46:01 by mcombeau          #+#    #+#             */
-/*   Updated: 2022/07/03 12:35:52 by mcombeau         ###   ########.fr       */
+/*   Updated: 2022/07/03 13:12:19 by mcombeau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,6 @@ typedef struct s_table
 	int					time_to_sleep;
 	int					must_eat_count;
 	int					all_alive;
-	int					*philos_full;
 	pthread_mutex_t		write_lock;
 	pthread_mutex_t		*fork_locks;
 	t_philo				**philos;

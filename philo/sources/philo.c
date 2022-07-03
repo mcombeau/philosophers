@@ -6,7 +6,7 @@
 /*   By: mcombeau <mcombeau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/29 11:46:06 by mcombeau          #+#    #+#             */
-/*   Updated: 2022/07/03 12:36:30 by mcombeau         ###   ########.fr       */
+/*   Updated: 2022/07/03 14:12:48 by mcombeau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,18 +75,24 @@ void	destroy_mutexes(t_table *table)
 		pthread_mutex_destroy(&table->philos[i]->eat_lock);
 		i++;
 	}
+	pthread_mutex_unlock(&table->write_lock);
 	pthread_mutex_destroy(&table->write_lock);
 }
 
 int	stop_simulation(t_table	*table)
 {
 	int	i;
-	int	full_count;
 
-	if (table->must_eat_count != -1)
+//	pthread_mutex_unlock(&table->write_lock);
+	i = 0;
+	while (i < table->nb_philos)
 	{
-		write_outcome(table);
+		pthread_detach(table->philos[i]->thread);
+		pthread_detach(table->philos[i]->grim_reaper);
+		i++;
 	}
+	if (table->must_eat_count != -1)
+		write_outcome(table);
 	destroy_mutexes(table);
 	free_table(table);
 	return (1);
@@ -106,22 +112,5 @@ int	main(int ac, char **av)
 		return (exit_error("Could not initialize table.\n", NULL));
 	start_simulation(table);
 	stop_simulation(table);
-//	free_table(table);
 	return (EXIT_SUCCESS);
 }
-/*
-	printf("Nb philos = %d\nTime to die = %d\n\
-	Time to eat = %d\nTime to sleep = %d\n\
-	Must eat count = %d\n", 
-	table->nb_philos, table->time_to_die, 
-	table->time_to_eat, table->time_to_sleep, 
-	table->must_eat_count);
-	get_time_in_ms();
-	usleep(2);
-	get_time_in_ms();
-	usleep(500);
-	get_time_in_ms();
-	usleep(1000);
-	get_time_in_ms();
-	free(table);*/
-	

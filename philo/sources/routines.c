@@ -6,37 +6,11 @@
 /*   By: mcombeau <mcombeau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/02 15:12:00 by mcombeau          #+#    #+#             */
-/*   Updated: 2022/07/03 12:40:54 by mcombeau         ###   ########.fr       */
+/*   Updated: 2022/07/03 14:09:10 by mcombeau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
-
-// TODO : CHECK MY LOGIC HERE. Does simulation stop when one philo eats
-// number of times or when all philos eat number of times ?
-
-void	*grim_reaper(void *data)
-{
-	t_philo	*philo;
-	t_table	*t;
-
-	philo = (t_philo *)data;
-	t = philo->table;
-	while (t->all_alive)
-	{
-		if (!philo->is_eating
-			&& (get_time_in_ms() - philo->last_meal >= t->time_to_die))
-		{
-			pthread_mutex_lock(&philo->eat_lock);
-			write_status(t, philo->id, "died", RED);
-			t->all_alive = 0;
-			pthread_mutex_unlock(&philo->eat_lock);
-		}
-		if (t->philos[t->nb_philos - 1]->times_ate == t->must_eat_count)
-			t->all_alive = 0;
-		usleep(100);
-	}
-}
 
 static void	eat_routine(t_philo *philo)
 {
