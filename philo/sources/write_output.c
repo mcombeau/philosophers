@@ -6,18 +6,19 @@
 /*   By: mcombeau <mcombeau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/02 13:20:23 by mcombeau          #+#    #+#             */
-/*   Updated: 2022/07/02 16:22:51 by mcombeau         ###   ########.fr       */
+/*   Updated: 2022/07/03 12:36:36 by mcombeau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-void	write_status(t_table *table, int id, char *str)
+void	write_status(t_table *t, int id, char *str, char *color)
 {
-	pthread_mutex_lock(&table->write_lock);
-	printf("%ld %d %s", get_time_in_ms() - table->start_time, id + 1, str);
+	pthread_mutex_lock(&t->write_lock);
+	printf("[%ld]\t%sPhilo #%d %s\e[0m\n",
+		get_time_in_ms() - t->start_time, color, id + 1, str);
 	if (str[0] != 'd')
-		pthread_mutex_unlock(&table->write_lock);
+		pthread_mutex_unlock(&t->write_lock);
 }
 
 int	ft_strlen(char *str)
@@ -38,33 +39,30 @@ int	exit_error(char *str, t_table *table)
 	return (EXIT_FAILURE);
 }
 
-void	*free_table(t_table *table)
-{
-	int	i;
-
-	if (!table)
-		return (NULL);
-	if (table->fork_locks != NULL)
-		free(table->fork_locks);
-	if (table->philos != NULL)
-	{
-		i = 0;
-		while (i < table->nb_philos)
-		{
-			if (table->philos[i] != NULL)
-				free(table->philos[i]);
-			i++;
-		}
-		free(table->philos);
-	}
-	free(table);
-	return (NULL);
-}
-
 void	error_msg(char *str)
 {
 	write(2, "philo: ", 7);
 	write(2, str, ft_strlen(str));
+}
+
+void	write_outcome(t_table *table)
+{
+	int	i;
+	int	full_count;
+
+	full_count = 0;
+	i = 0;
+	while (i < table->nb_philos)
+	{
+		if (table->philos[i]->times_ate == table->must_eat_count)
+		{
+			printf("philo %d ate %d times.\n", i + 1, table->philos[i]->times_ate);
+			full_count++;
+		}
+		i++;
+	}
+	printf("%d/%d philosophers ate %d times.\n",
+		full_count, table->nb_philos, table->must_eat_count);
 }
 
 int	exit_usage(void)

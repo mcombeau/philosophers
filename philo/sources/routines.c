@@ -6,7 +6,7 @@
 /*   By: mcombeau <mcombeau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/02 15:12:00 by mcombeau          #+#    #+#             */
-/*   Updated: 2022/07/02 16:29:02 by mcombeau         ###   ########.fr       */
+/*   Updated: 2022/07/03 12:40:54 by mcombeau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ void	*grim_reaper(void *data)
 			&& (get_time_in_ms() - philo->last_meal >= t->time_to_die))
 		{
 			pthread_mutex_lock(&philo->eat_lock);
-			write_status(t, philo->id, "died\n");
+			write_status(t, philo->id, "died", RED);
 			t->all_alive = 0;
 			pthread_mutex_unlock(&philo->eat_lock);
 		}
@@ -41,11 +41,11 @@ void	*grim_reaper(void *data)
 static void	eat_routine(t_philo *philo)
 {
 	pthread_mutex_lock(&philo->table->fork_locks[philo->left_fork]);
-	write_status(philo->table, philo->id, "has taken a fork\n");
+	write_status(philo->table, philo->id, "has taken a fork", PURPLE);
 	pthread_mutex_lock(&philo->table->fork_locks[philo->right_fork]);
-	write_status(philo->table, philo->id, "has taken a fork\n");
+	write_status(philo->table, philo->id, "has taken a fork", PURPLE);
 	pthread_mutex_lock(&philo->eat_lock);
-	write_status(philo->table, philo->id, "is eating\n");
+	write_status(philo->table, philo->id, "is eating", GREEN);
 	philo->is_eating = 1;
 	philo->last_meal = get_time_in_ms();
 	usleep(philo->table->time_to_eat * 1000 - 16000);
@@ -62,7 +62,7 @@ static void	sleep_routine(t_philo *philo)
 {
 	unsigned long int	time;
 
-	write_status(philo->table, philo->id, "is sleeping\n");
+	write_status(philo->table, philo->id, "is sleeping", CYAN);
 	time = get_time_in_ms();
 	usleep(philo->table->time_to_sleep * 1000 - 16000);
 	while (get_time_in_ms() - time < philo->table->time_to_sleep)
@@ -71,7 +71,7 @@ static void	sleep_routine(t_philo *philo)
 
 static void	think_routine(t_philo *philo)
 {
-	write_status(philo->table, philo->id, "is thinking\n");
+	write_status(philo->table, philo->id, "is thinking", CYAN);
 }
 
 void	*philosopher(void *data)

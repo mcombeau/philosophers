@@ -6,7 +6,7 @@
 /*   By: mcombeau <mcombeau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/29 11:46:01 by mcombeau          #+#    #+#             */
-/*   Updated: 2022/07/02 15:57:38 by mcombeau         ###   ########.fr       */
+/*   Updated: 2022/07/03 12:35:52 by mcombeau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,12 @@
 # include <stdio.h>
 # include <stdlib.h>
 # include <sys/time.h>
+
+# define NC "\e[0m"
+# define RED "\e[31m"
+# define GREEN "\e[32m"
+# define PURPLE "\e[35m"
+# define CYAN "\e[36m"
 
 typedef struct s_philo
 {
@@ -43,6 +49,7 @@ typedef struct s_table
 	int					time_to_sleep;
 	int					must_eat_count;
 	int					all_alive;
+	int					*philos_full;
 	pthread_mutex_t		write_lock;
 	pthread_mutex_t		*fork_locks;
 	t_philo				**philos;
@@ -57,6 +64,12 @@ unsigned long int	get_time_in_ms(void);
 void				*grim_reaper(void *data);
 void				*philosopher(void *data);
 void				*free_table(t_table *table);
-void				write_status(t_table *table, int id, char *str);
+void				write_status(t_table *t, int id, char *str, char *color);
+void				write_outcome(t_table *table);
+
+/*	Initialization	*/
+t_table				*init_table(int ac, char **av, int i);
+pthread_mutex_t		*init_forks(t_table *table);
+t_philo				**init_philosophers(t_table *table);
 
 #endif
