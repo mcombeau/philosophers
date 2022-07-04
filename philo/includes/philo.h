@@ -6,7 +6,7 @@
 /*   By: mcombeau <mcombeau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/29 11:46:01 by mcombeau          #+#    #+#             */
-/*   Updated: 2022/07/04 15:45:35 by mcombeau         ###   ########.fr       */
+/*   Updated: 2022/07/04 17:43:40 by mcombeau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,10 +21,12 @@
 # include <sys/time.h>
 # include <stdbool.h>
 
+/*------------------------------------------------------*
+*						Macros							*
+*-------------------------------------------------------*/
+
 # define MAX_PHILOS	1000
 # define STR_MAX_PHILOS "1000"
-
-/*	Macros	*/
 
 # define NC		"\e[0m"
 # define RED	"\e[31m"
@@ -52,7 +54,9 @@ too many philosophers, max: %s\n"
 # define STR_ERR_MALLOC	"%s error: Could not allocate memory.\n"
 # define STR_ERR_MUTEX	"%s error: Could not create mutex.\n"
 
-/*	Structures	*/
+/*------------------------------------------------------*
+*						Structures						*
+*-------------------------------------------------------*/
 
 typedef struct s_philo	t_philo;
 
@@ -84,25 +88,38 @@ typedef struct s_philo
 	t_table				*table;
 }	t_philo;
 
-/* Functions */
+/*------------------------------------------------------*
+*					Function Prototypes					*
+*-------------------------------------------------------*/
+
+//	parsing.c
 bool			is_valid_input(int ac, char **av);
 int				integer_atoi(char *str);
-int				exit_error(char *str, char *details, t_table *table);
-void			*error_msg(char *str, char *details, t_table *table);
-int				msg(char *str, char *detail, int exit_no);
-time_t			get_time_in_ms(void);
-void			*grim_reaper(void *data);
+
+//	init.c
+t_table			*init_table(int ac, char **av, int i);
+
+//	routines.c
 void			*philosopher(void *data);
-void			*free_table(t_table *table);
-void			write_status(t_table *t, int id, char *str, char *color);
-void			write_outcome(t_table *table);
-bool			has_simulation_stopped(t_table *table);
+
+//	time.c
+time_t			get_time_in_ms(void);
 void			philo_sleep(t_table *table, time_t sleep_time);
 void			sim_start_delay(time_t start_time);
 
-/*	Initialization	*/
-t_table			*init_table(int ac, char **av, int i);
-pthread_mutex_t	*init_forks(t_table *table);
-t_philo			**init_philosophers(t_table *table);
+//	output.c
+void			write_status(t_table *t, int id, char *str, char *color);
+void			write_outcome(t_table *table);
+void			*error_msg(char *str, char *details, t_table *table);
+int				msg(char *str, char *detail, int exit_no);
+
+//	grim_reaper.c
+void			*grim_reaper(void *data);
+bool			has_simulation_stopped(t_table *table);
+
+//	exit.c
+int				exit_error(char *str, char *details, t_table *table);
+void			*free_table(t_table *table);
+void			destroy_mutexes(t_table *table);
 
 #endif

@@ -1,18 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   initializing.c                                     :+:      :+:    :+:   */
+/*   init.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mcombeau <mcombeau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/03 11:35:04 by mcombeau          #+#    #+#             */
-/*   Updated: 2022/07/04 15:56:13 by mcombeau         ###   ########.fr       */
+/*   Updated: 2022/07/04 17:33:31 by mcombeau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-pthread_mutex_t	*init_forks(t_table *table)
+static pthread_mutex_t	*init_forks(t_table *table)
 {
 	pthread_mutex_t	*forks;
 	unsigned int	i;
@@ -30,7 +30,7 @@ pthread_mutex_t	*init_forks(t_table *table)
 	return (forks);
 }
 
-t_philo	**init_philosophers(t_table *table)
+static t_philo	**init_philosophers(t_table *table)
 {
 	t_philo			**philos;
 	unsigned int	i;
@@ -56,7 +56,7 @@ t_philo	**init_philosophers(t_table *table)
 	return (philos);
 }
 
-bool	init_global_mutexes(t_table *table)
+static bool	init_global_mutexes(t_table *table)
 {
 	table->fork_locks = init_forks(table);
 	if (!table->fork_locks)

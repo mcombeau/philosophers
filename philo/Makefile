@@ -11,7 +11,8 @@ SRC		=	philo.c \
 			time.c \
 			routines.c \
 			initializing.c \
-			output.c
+			output.c \
+			exit.c
 SRCS	= $(addprefix $(SRC_PATH), $(SRC))
 OBJ		= $(SRC:.c=.o)
 OBJS	= $(addprefix $(OBJ_PATH), $(OBJ))
