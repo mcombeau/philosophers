@@ -6,7 +6,7 @@
 /*   By: mcombeau <mcombeau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/04 12:00:18 by mcombeau          #+#    #+#             */
-/*   Updated: 2022/07/04 17:07:04 by mcombeau         ###   ########.fr       */
+/*   Updated: 2022/07/04 17:57:55 by mcombeau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,9 +40,35 @@ static bool	philo_is_dying(t_philo *philo)
 	{
 		set_sim_stop_flag(philo->table, true);
 		pthread_mutex_lock(&philo->table->write_lock);
-		printf(STR_STATUS, time - philo->table->start_time, RED, philo->id + 1, STR_DIE);
+		printf(STR_STATUS, time - philo->table->start_time,
+			RED, philo->id + 1, STR_DIE);
 		pthread_mutex_unlock(&philo->table->write_lock);
 		pthread_mutex_unlock(&philo->death_lock);
+		return (true);
+	}
+	return (false);
+}
+
+static bool	end_condition_reached(t_table *table)
+{
+	unsigned int	i;
+	bool			all_ate_enough;
+
+	i = 0;
+	all_ate_enough = true;
+	while (i < table->nb_philos)
+	{
+		pthread_mutex_lock(&table->philos[i]->death_lock);
+		if (philo_is_dying(table->philos[i]))
+			return (true);
+		if (table->philos[i]->times_ate < table->must_eat_count)
+			all_ate_enough = false;
+		pthread_mutex_unlock(&table->philos[i]->death_lock);
+		i++;
+	}
+	if (table->must_eat_count != 0 && all_ate_enough == true)
+	{
+		set_sim_stop_flag(table, true);
 		return (true);
 	}
 	return (false);
@@ -51,31 +77,14 @@ static bool	philo_is_dying(t_philo *philo)
 void	*grim_reaper(void *data)
 {
 	t_table			*table;
-	unsigned int	i;
-	bool			all_ate_enough;
 
 	table = (t_table *)data;
 	sim_start_delay(table->start_time);
 	set_sim_stop_flag(table, false);
 	while (true)
 	{
-		i = 0;
-		all_ate_enough = true;
-		while (i < table->nb_philos)
-		{
-			pthread_mutex_lock(&table->philos[i]->death_lock);
-			if (philo_is_dying(table->philos[i]))
-				return (NULL);
-			if (table->philos[i]->times_ate < table->must_eat_count)
-				all_ate_enough = false;
-			pthread_mutex_unlock(&table->philos[i]->death_lock);
-			i++;
-		}
-		if (table->must_eat_count != 0 && all_ate_enough == true)
-		{
-			set_sim_stop_flag(table, true);
+		if (end_condition_reached(table) == true)
 			return (NULL);
-		}
 	}
 	return (NULL);
 }

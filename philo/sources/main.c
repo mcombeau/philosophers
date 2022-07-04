@@ -6,7 +6,7 @@
 /*   By: mcombeau <mcombeau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/29 11:46:06 by mcombeau          #+#    #+#             */
-/*   Updated: 2022/07/04 17:45:07 by mcombeau         ###   ########.fr       */
+/*   Updated: 2022/07/04 17:56:36 by mcombeau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,14 +42,11 @@ static int	stop_simulation(t_table	*table)
 	i = 0;
 	while (i < table->nb_philos)
 	{
-		printf("Joining threads.\n");
 		pthread_join(table->philos[i]->thread, NULL);
-		printf("Philo #%d thread joined.\n", table->philos[i]->id + 1);
 		i++;
 	}
 	if (table->nb_philos > 1)
 		pthread_join(table->grim_reaper, NULL);
-	printf("Grim reaper thread joined.\n");
 	if (table->must_eat_count != 0)
 		write_outcome(table);
 	destroy_mutexes(table);
