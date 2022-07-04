@@ -6,7 +6,7 @@
 /*   By: mcombeau <mcombeau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/29 11:46:06 by mcombeau          #+#    #+#             */
-/*   Updated: 2022/07/04 11:23:48 by mcombeau         ###   ########.fr       */
+/*   Updated: 2022/07/04 13:14:23 by mcombeau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 int	start_simulation(t_table *table)
 {
-	int	i;
+	unsigned int	i;
 
 	table->start_time = get_time_in_ms();
 	i = 0;
@@ -43,7 +43,7 @@ int	start_simulation(t_table *table)
 
 void	*free_table(t_table *table)
 {
-	int	i;
+	unsigned int	i;
 
 	if (!table)
 		return (NULL);
@@ -66,7 +66,7 @@ void	*free_table(t_table *table)
 
 void	destroy_mutexes(t_table *table)
 {
-	int	i;
+	unsigned int	i;
 
 	i = 0;
 	while (i < table->nb_philos)
@@ -81,7 +81,7 @@ void	destroy_mutexes(t_table *table)
 
 int	stop_simulation(t_table	*table)
 {
-	int	i;
+	unsigned int	i;
 
 //	pthread_mutex_unlock(&table->write_lock);
 	i = 0;
@@ -105,11 +105,11 @@ int	main(int ac, char **av)
 	table = NULL;
 	if (ac - 1 < 4 || ac - 1 > 5)
 		return (msg(STR_USAGE, NULL, EXIT_FAILURE));
-	if (is_valid_input(ac, av) == 0)
+	if (!is_valid_input(ac, av))
 		return (EXIT_FAILURE);
 	table = init_table(ac, av, 1);
 	if (!table)
-		return (exit_error("Could not initialize table.\n", NULL));
+		return (EXIT_FAILURE);
 	start_simulation(table);
 	stop_simulation(table);
 	return (EXIT_SUCCESS);

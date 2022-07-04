@@ -6,7 +6,7 @@
 /*   By: mcombeau <mcombeau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/03 11:35:04 by mcombeau          #+#    #+#             */
-/*   Updated: 2022/07/04 11:30:47 by mcombeau         ###   ########.fr       */
+/*   Updated: 2022/07/04 13:21:02 by mcombeau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 pthread_mutex_t	*init_forks(t_table *table)
 {
 	pthread_mutex_t	*forks;
-	int				i;
+	unsigned int	i;
 
 	forks = malloc(sizeof(pthread_mutex_t) * table->nb_philos);
 	if (!forks)
@@ -38,8 +38,8 @@ pthread_mutex_t	*init_forks(t_table *table)
 
 t_philo	**init_philosophers(t_table *table)
 {
-	t_philo	**philos;
-	int		i;
+	t_philo			**philos;
+	unsigned int	i;
 
 	philos = malloc(sizeof(t_philo) * (table->nb_philos + 1));
 	if (!philos)

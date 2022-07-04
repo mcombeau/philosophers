@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   write_output.c                                     :+:      :+:    :+:   */
+/*   output.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mcombeau <mcombeau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/02 13:20:23 by mcombeau          #+#    #+#             */
-/*   Updated: 2022/07/04 11:11:17 by mcombeau         ###   ########.fr       */
+/*   Updated: 2022/07/04 13:21:43 by mcombeau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,15 +39,15 @@ int	exit_error(char *str, t_table *table)
 
 void	write_outcome(t_table *table)
 {
-	int	i;
-	int	full_count;
+	unsigned int	i;
+	unsigned int	full_count;
 
 	pthread_mutex_lock(&table->write_lock);
 	full_count = 0;
 	i = 0;
 	while (i < table->nb_philos)
 	{
-		if (table->philos[i]->times_ate >= table->must_eat_count)
+		if ((int)table->philos[i]->times_ate >= table->must_eat_count)
 			full_count++;
 		i++;
 	}

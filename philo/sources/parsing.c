@@ -6,7 +6,7 @@
 /*   By: mcombeau <mcombeau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/02 11:55:16 by mcombeau          #+#    #+#             */
-/*   Updated: 2022/07/04 11:00:54 by mcombeau         ###   ########.fr       */
+/*   Updated: 2022/07/04 13:15:54 by mcombeau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
 *	Returns true (0) if the string only contains digits.
 *	Returns false (1) if the string contains a character that is not a digit.
 */
-static int	contains_only_digits(char *str)
+static bool	contains_only_digits(char *str)
 {
 	int	i;
 
@@ -25,10 +25,10 @@ static int	contains_only_digits(char *str)
 	while (str[i])
 	{
 		if (str[i] < '0' || str[i] > '9')
-			return (0);
+			return (false);
 		i++;
 	}
-	return (1);
+	return (true);
 }
 
 /* integer_atoi:
@@ -58,7 +58,7 @@ int	integer_atoi(char *str)
 *	digits only, which does not exceed INT MAX.
 *	Returns 1 if all arguments are valid, 0 if one of them is invalid.
 */
-int	is_valid_input(int ac, char **av)
+bool	is_valid_input(int ac, char **av)
 {
 	int	i;
 
@@ -66,8 +66,8 @@ int	is_valid_input(int ac, char **av)
 	while (i < ac)
 	{
 		if (!contains_only_digits(av[i]) || integer_atoi(av[i]) == -1)
-			return (msg(STR_ERR_INPUT_DIGIT, av[i], 0));
+			return (msg(STR_ERR_INPUT_DIGIT, av[i], false));
 		i++;
 	}
-	return (1);
+	return (true);
 }

@@ -1,11 +1,17 @@
 CC		= gcc
-CFLAGS	= -pthread
+CFLAGS	= -Werror -Wall -Wextra -pthread
 NAME	= philo
 
 SRC_PATH = sources/
 OBJ_PATH = objects/
 
-SRC		= philo.c parsing.c write_output.c time.c routines.c initializing.c
+SRC		=	philo.c \
+			parsing.c \
+			grim_reaper.c \
+			time.c \
+			routines.c \
+			initializing.c \
+			output.c
 SRCS	= $(addprefix $(SRC_PATH), $(SRC))
 OBJ		= $(SRC:.c=.o)
 OBJS	= $(addprefix $(OBJ_PATH), $(OBJ))

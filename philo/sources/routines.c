@@ -6,7 +6,7 @@
 /*   By: mcombeau <mcombeau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/02 15:12:00 by mcombeau          #+#    #+#             */
-/*   Updated: 2022/07/04 10:34:15 by mcombeau         ###   ########.fr       */
+/*   Updated: 2022/07/04 13:20:29 by mcombeau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ static void	eat_routine(t_philo *philo)
 
 static void	sleep_routine(t_philo *philo)
 {
-	unsigned long int	time;
+	time_t	time;
 
 	write_status(philo->table, philo->id, STR_SLEEP, CYAN);
 	time = get_time_in_ms();
@@ -60,4 +60,5 @@ void	*philosopher(void *data)
 		think_routine(philo);
 		usleep(100);
 	}
+	return (NULL);
 }
