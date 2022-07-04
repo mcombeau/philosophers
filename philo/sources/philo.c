@@ -6,7 +6,7 @@
 /*   By: mcombeau <mcombeau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/29 11:46:06 by mcombeau          #+#    #+#             */
-/*   Updated: 2022/07/03 14:12:48 by mcombeau         ###   ########.fr       */
+/*   Updated: 2022/07/04 11:11:41 by mcombeau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ int	start_simulation(t_table *table)
 		table->philos[i]->last_meal = get_time_in_ms();
 		if (pthread_create(&table->philos[i]->thread, NULL,
 				&philosopher, table->philos[i]) != 0)
-			return (exit_error("Could not create thread.\n", table));
+			return (exit_error(STR_ERR_THREAD, table));
 		i++;
 		usleep(100);
 	}
@@ -32,7 +32,7 @@ int	start_simulation(t_table *table)
 	{
 		if (pthread_create(&table->philos[i]->grim_reaper, NULL,
 				&grim_reaper, table->philos[i]) != 0)
-			return (exit_error("Could not create thread.\n", table));
+			return (exit_error(STR_ERR_THREAD, table));
 		i++;
 		usleep(100);
 	}
@@ -104,9 +104,9 @@ int	main(int ac, char **av)
 
 	table = NULL;
 	if (ac - 1 < 4 || ac - 1 > 5)
-		return (exit_usage());
+		return (msg(STR_USAGE, NULL, EXIT_FAILURE));
 	if (is_valid_input(ac, av) == 0)
-		return (exit_error("Invalid input.\n", NULL));
+		return (EXIT_FAILURE);
 	table = init_table(ac, av, 1);
 	if (!table)
 		return (exit_error("Could not initialize table.\n", NULL));

@@ -6,7 +6,7 @@
 /*   By: mcombeau <mcombeau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/02 13:20:23 by mcombeau          #+#    #+#             */
-/*   Updated: 2022/07/03 14:07:25 by mcombeau         ###   ########.fr       */
+/*   Updated: 2022/07/04 11:11:17 by mcombeau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,8 +15,7 @@
 void	write_status(t_table *t, int id, char *str, char *color)
 {
 	pthread_mutex_lock(&t->write_lock);
-	printf("[%ld]\t%sPhilo #%d %s\e[0m\n",
-		get_time_in_ms() - t->start_time, color, id + 1, str);
+	printf(STR_STATUS, get_time_in_ms() - t->start_time, color, id + 1, str);
 	if (str[0] != 'd')
 		pthread_mutex_unlock(&t->write_lock);
 }
@@ -35,14 +34,7 @@ int	exit_error(char *str, t_table *table)
 {
 	if (table != NULL)
 		free_table(table);
-	error_msg(str);
-	return (EXIT_FAILURE);
-}
-
-void	error_msg(char *str)
-{
-	write(2, "philo: ", 7);
-	write(2, str, ft_strlen(str));
+	return (msg(str, NULL, EXIT_FAILURE));
 }
 
 void	write_outcome(t_table *table)
@@ -64,10 +56,11 @@ void	write_outcome(t_table *table)
 	pthread_mutex_unlock(&table->write_lock);
 }
 
-int	exit_usage(void)
+int	msg(char *str, char *detail, int exit_no)
 {
-	printf("philo: usage: ./philo [number_of_philosophers] \
-[time_to_die] [time_to_eat] [time_to_sleep] \
-[number_of_times_each_philosopher_must_eat]\n");
-	return (EXIT_SUCCESS);
+	if (!detail)
+		printf(str, STR_PROG_NAME);
+	else
+		printf(str, STR_PROG_NAME, detail);
+	return (exit_no);
 }

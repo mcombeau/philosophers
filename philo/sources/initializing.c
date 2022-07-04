@@ -6,7 +6,7 @@
 /*   By: mcombeau <mcombeau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/03 11:35:04 by mcombeau          #+#    #+#             */
-/*   Updated: 2022/07/03 12:36:15 by mcombeau         ###   ########.fr       */
+/*   Updated: 2022/07/04 11:15:35 by mcombeau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,12 +19,18 @@ pthread_mutex_t	*init_forks(t_table *table)
 
 	forks = malloc(sizeof(pthread_mutex_t) * table->nb_philos);
 	if (!forks)
+	{
+		msg(STR_ERR_MALLOC, NULL, 0);
 		return (NULL);
+	}
 	i = 0;
 	while (i < table->nb_philos)
 	{
 		if (pthread_mutex_init(&forks[i], 0) != 0)
+		{
+			msg(STR_ERR_MUTEX, NULL, 0);
 			return (NULL);
+		}
 		i++;
 	}
 	return (forks);
@@ -37,15 +43,24 @@ t_philo	**init_philosophers(t_table *table)
 
 	philos = malloc(sizeof(t_philo) * (table->nb_philos + 1));
 	if (!philos)
+	{
+		msg(STR_ERR_MALLOC, NULL, 0);
 		return (NULL);
+	}
 	i = 0;
 	while (i < table->nb_philos)
 	{
 		philos[i] = malloc(sizeof(t_philo) * 1);
 		if (!philos[i])
+		{
+			msg(STR_ERR_MALLOC, NULL, 0);
 			return (NULL);
+		}
 		if (pthread_mutex_init(&philos[i]->eat_lock, 0) != 0)
+		{
+			msg(STR_ERR_MUTEX, NULL, 0);
 			return (NULL);
+		}
 		philos[i]->table = table;
 		philos[i]->id = i;
 		philos[i]->is_eating = 0;
@@ -63,7 +78,10 @@ t_table	*init_table(int ac, char **av, int i)
 
 	table = malloc(sizeof(t_table) * 1);
 	if (!table)
+	{
+		msg(STR_ERR_MALLOC, NULL, 0);
 		return (NULL);
+	}
 	table->nb_philos = integer_atoi(av[i++]);
 	table->time_to_die = integer_atoi(av[i++]);
 	table->time_to_eat = integer_atoi(av[i++]);

@@ -6,7 +6,7 @@
 /*   By: mcombeau <mcombeau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/02 11:55:16 by mcombeau          #+#    #+#             */
-/*   Updated: 2022/07/02 16:52:57 by mcombeau         ###   ########.fr       */
+/*   Updated: 2022/07/04 11:00:54 by mcombeau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,10 +65,8 @@ int	is_valid_input(int ac, char **av)
 	i = 1;
 	while (i < ac)
 	{
-		if (!contains_only_digits(av[i]))
-			return (0);
-		if (integer_atoi(av[i]) == -1)
-			return (0);
+		if (!contains_only_digits(av[i]) || integer_atoi(av[i]) == -1)
+			return (msg(STR_ERR_INPUT_DIGIT, av[i], 0));
 		i++;
 	}
 	return (1);

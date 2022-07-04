@@ -6,7 +6,7 @@
 /*   By: mcombeau <mcombeau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/02 15:12:00 by mcombeau          #+#    #+#             */
-/*   Updated: 2022/07/03 14:09:10 by mcombeau         ###   ########.fr       */
+/*   Updated: 2022/07/04 10:34:15 by mcombeau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,11 +15,11 @@
 static void	eat_routine(t_philo *philo)
 {
 	pthread_mutex_lock(&philo->table->fork_locks[philo->left_fork]);
-	write_status(philo->table, philo->id, "has taken a fork", PURPLE);
+	write_status(philo->table, philo->id, STR_FORK, PURPLE);
 	pthread_mutex_lock(&philo->table->fork_locks[philo->right_fork]);
-	write_status(philo->table, philo->id, "has taken a fork", PURPLE);
+	write_status(philo->table, philo->id, STR_FORK, PURPLE);
 	pthread_mutex_lock(&philo->eat_lock);
-	write_status(philo->table, philo->id, "is eating", GREEN);
+	write_status(philo->table, philo->id, STR_EAT, GREEN);
 	philo->is_eating = 1;
 	philo->last_meal = get_time_in_ms();
 	usleep(philo->table->time_to_eat * 1000 - 16000);
@@ -36,7 +36,7 @@ static void	sleep_routine(t_philo *philo)
 {
 	unsigned long int	time;
 
-	write_status(philo->table, philo->id, "is sleeping", CYAN);
+	write_status(philo->table, philo->id, STR_SLEEP, CYAN);
 	time = get_time_in_ms();
 	usleep(philo->table->time_to_sleep * 1000 - 16000);
 	while (get_time_in_ms() - time < philo->table->time_to_sleep)
@@ -45,7 +45,7 @@ static void	sleep_routine(t_philo *philo)
 
 static void	think_routine(t_philo *philo)
 {
-	write_status(philo->table, philo->id, "is thinking", CYAN);
+	write_status(philo->table, philo->id, STR_THINK, CYAN);
 }
 
 void	*philosopher(void *data)
