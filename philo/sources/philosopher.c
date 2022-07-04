@@ -6,7 +6,7 @@
 /*   By: mcombeau <mcombeau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/02 15:12:00 by mcombeau          #+#    #+#             */
-/*   Updated: 2022/07/04 17:44:59 by mcombeau         ###   ########.fr       */
+/*   Updated: 2022/07/04 18:10:54 by mcombeau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,9 +20,10 @@ static void	eat_routine(t_philo *philo)
 	write_status(philo->table, philo->id, STR_FORK, PURPLE);
 	pthread_mutex_lock(&philo->death_lock);
 	write_status(philo->table, philo->id, STR_EAT, GREEN);
+	if (has_simulation_stopped(philo->table) == false)
+		philo->times_ate += 1;
 	philo_sleep(philo->table, philo->table->time_to_eat);
 	philo->last_meal = get_time_in_ms();
-	philo->times_ate += 1;
 	pthread_mutex_unlock(&philo->death_lock);
 	pthread_mutex_unlock(&philo->table->fork_locks[philo->left_fork]);
 	pthread_mutex_unlock(&philo->table->fork_locks[philo->right_fork]);

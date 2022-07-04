@@ -6,7 +6,7 @@
 /*   By: mcombeau <mcombeau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/02 13:20:23 by mcombeau          #+#    #+#             */
-/*   Updated: 2022/07/04 17:35:16 by mcombeau         ###   ########.fr       */
+/*   Updated: 2022/07/04 18:12:52 by mcombeau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,10 +14,10 @@
 
 void	write_status(t_table *t, int id, char *str, char *color)
 {
-	if (has_simulation_stopped(t) == true)
-		return ;
 	pthread_mutex_lock(&t->write_lock);
-	printf(STR_STATUS, get_time_in_ms() - t->start_time, color, id + 1, str);
+	if (has_simulation_stopped(t) == false)
+		printf(STR_STATUS, get_time_in_ms() - t->start_time,
+			color, id + 1, str);
 	pthread_mutex_unlock(&t->write_lock);
 }
 
