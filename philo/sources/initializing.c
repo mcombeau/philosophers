@@ -6,7 +6,7 @@
 /*   By: mcombeau <mcombeau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/03 11:35:04 by mcombeau          #+#    #+#             */
-/*   Updated: 2022/07/04 11:15:35 by mcombeau         ###   ########.fr       */
+/*   Updated: 2022/07/04 11:30:47 by mcombeau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,6 +83,11 @@ t_table	*init_table(int ac, char **av, int i)
 		return (NULL);
 	}
 	table->nb_philos = integer_atoi(av[i++]);
+	if (table->nb_philos > MAX_PHILOS)
+	{
+		msg(STR_ERR_INPUT_PHILO_OFLOW, STR_MAX_PHILOS, 0);
+		return (free_table(table));
+	}
 	table->time_to_die = integer_atoi(av[i++]);
 	table->time_to_eat = integer_atoi(av[i++]);
 	table->time_to_sleep = integer_atoi(av[i++]);

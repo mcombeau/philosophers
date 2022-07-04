@@ -6,7 +6,7 @@
 /*   By: mcombeau <mcombeau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/29 11:46:01 by mcombeau          #+#    #+#             */
-/*   Updated: 2022/07/04 11:11:26 by mcombeau         ###   ########.fr       */
+/*   Updated: 2022/07/04 11:30:37 by mcombeau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,8 @@
 # include <stdlib.h>
 # include <sys/time.h>
 
-# define MAX_PHILOS 500
+# define MAX_PHILOS	500
+# define STR_MAX_PHILOS "500"
 
 /*	Macros	*/
 
@@ -45,8 +46,8 @@
 not a valid positive unsigned integer between 0 and 2147483647.\n"
 # define STR_ERR_INPUT_VAL_OFLOW	"%s invalid input: %s: \
 value overflow, max = %u\n"
-# define STR_ERR_INPUT_PHILO_OFLOW	"%s invalid input: %s: \
-philosopher overflow, max = %u\n"
+# define STR_ERR_INPUT_PHILO_OFLOW	"%s invalid input: \
+too many philosophers, max: %s\n"
 
 # define STR_USAGE "%s usage: ./philo [number_of_philosophers] \
 [time_to_die] [time_to_eat] [time_to_sleep] \
