@@ -6,7 +6,7 @@
 /*   By: mcombeau <mcombeau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/02 13:20:23 by mcombeau          #+#    #+#             */
-/*   Updated: 2022/07/04 13:21:43 by mcombeau         ###   ########.fr       */
+/*   Updated: 2022/07/04 16:23:24 by mcombeau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,27 +14,26 @@
 
 void	write_status(t_table *t, int id, char *str, char *color)
 {
+	if (has_simulation_stopped(t) == true)
+		return ;
 	pthread_mutex_lock(&t->write_lock);
 	printf(STR_STATUS, get_time_in_ms() - t->start_time, color, id + 1, str);
-	if (str[0] != 'd')
-		pthread_mutex_unlock(&t->write_lock);
+	pthread_mutex_unlock(&t->write_lock);
 }
 
-int	ft_strlen(char *str)
-{
-	int	i;
-
-	i = 0;
-	while (str[i])
-		i++;
-	return (i);
-}
-
-int	exit_error(char *str, t_table *table)
+int	exit_error(char *str, char *details, t_table *table)
 {
 	if (table != NULL)
 		free_table(table);
-	return (msg(str, NULL, EXIT_FAILURE));
+	return (msg(str, details, EXIT_FAILURE));
+}
+
+void	*error_msg(char *str, char *details, t_table *table)
+{
+	if (table != NULL)
+		free_table(table);
+	msg(str, details, EXIT_FAILURE);
+	return (NULL);
 }
 
 void	write_outcome(t_table *table)
@@ -42,18 +41,19 @@ void	write_outcome(t_table *table)
 	unsigned int	i;
 	unsigned int	full_count;
 
-	pthread_mutex_lock(&table->write_lock);
 	full_count = 0;
 	i = 0;
 	while (i < table->nb_philos)
 	{
-		if ((int)table->philos[i]->times_ate >= table->must_eat_count)
+		if (table->philos[i]->times_ate >= table->must_eat_count)
 			full_count++;
 		i++;
 	}
+	pthread_mutex_lock(&table->write_lock);
 	printf("%d/%d philosophers ate at least %d times.\n",
 		full_count, table->nb_philos, table->must_eat_count);
 	pthread_mutex_unlock(&table->write_lock);
+	return ;
 }
 
 int	msg(char *str, char *detail, int exit_no)

@@ -6,46 +6,76 @@
 /*   By: mcombeau <mcombeau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/04 12:00:18 by mcombeau          #+#    #+#             */
-/*   Updated: 2022/07/04 13:20:20 by mcombeau         ###   ########.fr       */
+/*   Updated: 2022/07/04 17:07:04 by mcombeau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-bool	philos_all_ate_enough(t_table *table)
+static void	set_sim_stop_flag(t_table *table, bool state)
 {
-	unsigned int	i;
+	pthread_mutex_lock(&table->sim_stop_lock);
+		table->sim_stop = state;
+	pthread_mutex_unlock(&table->sim_stop_lock);
+}
 
-	i = 0;
-	while (i < table->nb_philos)
+bool	has_simulation_stopped(t_table *table)
+{
+	bool	r;
+
+	r = false;
+	pthread_mutex_lock(&table->sim_stop_lock);
+	if (table->sim_stop == true)
+		r = true;
+	pthread_mutex_unlock(&table->sim_stop_lock);
+	return (r);
+}
+
+static bool	philo_is_dying(t_philo *philo)
+{
+	time_t	time;
+
+	time = get_time_in_ms();
+	if (time - philo->last_meal >= philo->table->time_to_die)
 	{
-		if ((int)table->philos[i]->times_ate < table->must_eat_count)
-			return (false);
-		i++;
+		set_sim_stop_flag(philo->table, true);
+		pthread_mutex_lock(&philo->table->write_lock);
+		printf(STR_STATUS, time - philo->table->start_time, RED, philo->id + 1, STR_DIE);
+		pthread_mutex_unlock(&philo->table->write_lock);
+		pthread_mutex_unlock(&philo->death_lock);
+		return (true);
 	}
-	return (true);
+	return (false);
 }
 
 void	*grim_reaper(void *data)
 {
-	t_philo	*philo;
-	t_table	*t;
+	t_table			*table;
+	unsigned int	i;
+	bool			all_ate_enough;
 
-	philo = (t_philo *)data;
-	t = philo->table;
-	while (t->all_alive)
+	table = (t_table *)data;
+	sim_start_delay(table->start_time);
+	set_sim_stop_flag(table, false);
+	while (true)
 	{
-		if (!philo->is_eating
-			&& (get_time_in_ms() - philo->last_meal >= t->time_to_die))
+		i = 0;
+		all_ate_enough = true;
+		while (i < table->nb_philos)
 		{
-			pthread_mutex_lock(&philo->eat_lock);
-			write_status(t, philo->id, "died", RED);
-			t->all_alive = 0;
-			pthread_mutex_unlock(&philo->eat_lock);
+			pthread_mutex_lock(&table->philos[i]->death_lock);
+			if (philo_is_dying(table->philos[i]))
+				return (NULL);
+			if (table->philos[i]->times_ate < table->must_eat_count)
+				all_ate_enough = false;
+			pthread_mutex_unlock(&table->philos[i]->death_lock);
+			i++;
 		}
-		if ((int)philo->times_ate == t->must_eat_count && philos_all_ate_enough(t))
-			t->all_alive = 0;
-		usleep(100);
+		if (table->must_eat_count != 0 && all_ate_enough == true)
+		{
+			set_sim_stop_flag(table, true);
+			return (NULL);
+		}
 	}
 	return (NULL);
 }

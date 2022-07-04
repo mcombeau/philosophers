@@ -6,39 +6,33 @@
 /*   By: mcombeau <mcombeau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/29 11:46:06 by mcombeau          #+#    #+#             */
-/*   Updated: 2022/07/04 13:14:23 by mcombeau         ###   ########.fr       */
+/*   Updated: 2022/07/04 17:21:57 by mcombeau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-int	start_simulation(t_table *table)
+static bool	start_simulation(t_table *table)
 {
 	unsigned int	i;
 
-	table->start_time = get_time_in_ms();
+	table->start_time = get_time_in_ms() + table->nb_philos;
 	i = 0;
 	while (i < table->nb_philos)
 	{
 		table->philos[i]->last_meal = get_time_in_ms();
 		if (pthread_create(&table->philos[i]->thread, NULL,
 				&philosopher, table->philos[i]) != 0)
-			return (exit_error(STR_ERR_THREAD, table));
+			return (exit_error(STR_ERR_THREAD, NULL, table));
 		i++;
-		usleep(100);
 	}
-	i = 0;
-	while (i < table->nb_philos)
+	if (table->nb_philos > 1)
 	{
-		if (pthread_create(&table->philos[i]->grim_reaper, NULL,
-				&grim_reaper, table->philos[i]) != 0)
-			return (exit_error(STR_ERR_THREAD, table));
-		i++;
-		usleep(100);
+		if (pthread_create(&table->grim_reaper, NULL,
+				&grim_reaper, table) != 0)
+			return (exit_error(STR_ERR_THREAD, NULL, table));
 	}
-	while (table->all_alive)
-		continue ;
-	return (1);
+	return (true);
 }
 
 void	*free_table(t_table *table)
@@ -72,26 +66,29 @@ void	destroy_mutexes(t_table *table)
 	while (i < table->nb_philos)
 	{
 		pthread_mutex_destroy(&table->fork_locks[i]);
-		pthread_mutex_destroy(&table->philos[i]->eat_lock);
+		pthread_mutex_destroy(&table->philos[i]->death_lock);
 		i++;
 	}
-	pthread_mutex_unlock(&table->write_lock);
 	pthread_mutex_destroy(&table->write_lock);
+	pthread_mutex_destroy(&table->sim_stop_lock);
 }
 
 int	stop_simulation(t_table	*table)
 {
 	unsigned int	i;
 
-//	pthread_mutex_unlock(&table->write_lock);
 	i = 0;
 	while (i < table->nb_philos)
 	{
-		pthread_detach(table->philos[i]->thread);
-		pthread_detach(table->philos[i]->grim_reaper);
+		printf("Joining threads.\n");
+		pthread_join(table->philos[i]->thread, NULL);
+		printf("Philo #%d thread joined.\n", table->philos[i]->id + 1);
 		i++;
 	}
-	if (table->must_eat_count != -1)
+	if (table->nb_philos > 1)
+		pthread_join(table->grim_reaper, NULL);
+	printf("Grim reaper thread joined.\n");
+	if (table->must_eat_count != 0)
 		write_outcome(table);
 	destroy_mutexes(table);
 	free_table(table);
@@ -110,7 +107,8 @@ int	main(int ac, char **av)
 	table = init_table(ac, av, 1);
 	if (!table)
 		return (EXIT_FAILURE);
-	start_simulation(table);
+	if (!start_simulation(table))
+		return (EXIT_FAILURE);
 	stop_simulation(table);
 	return (EXIT_SUCCESS);
 }
