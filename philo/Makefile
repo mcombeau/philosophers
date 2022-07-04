@@ -5,12 +5,12 @@ NAME	= philo
 SRC_PATH = sources/
 OBJ_PATH = objects/
 
-SRC		=	philo.c \
+SRC		=	main.c \
 			parsing.c \
 			grim_reaper.c \
 			time.c \
-			routines.c \
-			initializing.c \
+			philosopher.c \
+			init.c \
 			output.c \
 			exit.c
 SRCS	= $(addprefix $(SRC_PATH), $(SRC))
