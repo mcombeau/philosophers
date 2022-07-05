@@ -6,7 +6,7 @@
 /*   By: mcombeau <mcombeau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/04 12:00:18 by mcombeau          #+#    #+#             */
-/*   Updated: 2022/07/05 15:23:44 by mcombeau         ###   ########.fr       */
+/*   Updated: 2022/07/05 16:09:08 by mcombeau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,7 +80,6 @@ void	*grim_reaper(void *data)
 
 	table = (t_table *)data;
 	sim_start_delay(table->start_time);
-	printf("Grim reaper start.\n");
 	set_sim_stop_flag(table, false);
 	while (true)
 	{
