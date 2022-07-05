@@ -6,7 +6,7 @@
 /*   By: mcombeau <mcombeau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/29 11:46:06 by mcombeau          #+#    #+#             */
-/*   Updated: 2022/07/05 14:43:54 by mcombeau         ###   ########.fr       */
+/*   Updated: 2022/07/05 16:02:02 by mcombeau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@ static bool	start_simulation(t_table *table)
 	i = 0;
 	while (i < table->nb_philos)
 	{
+		table->philos[i]->last_meal = get_time_in_ms();
 		if (pthread_create(&table->philos[i]->thread, NULL,
 				&philosopher, table->philos[i]) != 0)
 			return (exit_error(STR_ERR_THREAD, NULL, table));

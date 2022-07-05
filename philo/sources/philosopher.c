@@ -6,7 +6,7 @@
 /*   By: mcombeau <mcombeau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/02 15:12:00 by mcombeau          #+#    #+#             */
-/*   Updated: 2022/07/05 15:18:34 by mcombeau         ###   ########.fr       */
+/*   Updated: 2022/07/05 15:21:34 by mcombeau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,7 @@ void	*philosopher(void *data)
 
 	philo = (t_philo *)data;
 	sim_start_delay(philo->table->start_time);
+	printf("Philo #%d start.\n", philo->id + 1);
 	philo->last_meal = get_time_in_ms();
 	if (philo->table->nb_philos == 1)
 		return (lone_philo_routine(philo));
