@@ -6,7 +6,7 @@
 /*   By: mcombeau <mcombeau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/03 11:35:04 by mcombeau          #+#    #+#             */
-/*   Updated: 2022/07/04 18:03:03 by mcombeau         ###   ########.fr       */
+/*   Updated: 2022/07/05 11:13:38 by mcombeau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,5 +89,6 @@ t_table	*init_table(int ac, char **av, int i)
 		return (NULL);
 	if (!init_global_mutexes(table))
 		return (NULL);
+	table->sim_stop = false;
 	return (table);
 }
