@@ -6,7 +6,7 @@
 /*   By: mcombeau <mcombeau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/29 11:46:01 by mcombeau          #+#    #+#             */
-/*   Updated: 2022/07/05 16:25:43 by mcombeau         ###   ########.fr       */
+/*   Updated: 2022/07/06 14:31:01 by mcombeau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,15 +34,7 @@
 # define PURPLE	"\e[35m"
 # define CYAN	"\e[36m"
 
-# define STR_STATUS	"[%10ld]\t%sPhilo #%d %s\e[0m\n"
-# define STR_FORK	"has taken a fork"
-# define STR_EAT	"is eating"
-# define STR_SLEEP	"is sleeping"
-# define STR_THINK	"is thinking"
-# define STR_DIE	"died"
-
 # define STR_PROG_NAME	"philo:"
-
 # define STR_USAGE	"%s usage: ./philo <number_of_philosophers> \
 <time_to_die> <time_to_eat> <time_to_sleep> \
 [number_of_times_each_philosopher_must_eat]\n"
@@ -88,6 +80,15 @@ typedef struct s_philo
 	t_table				*table;
 }	t_philo;
 
+typedef enum e_status
+{
+	DIED = 0,
+	GOT_FORK = 1,
+	EATING = 2,
+	SLEEPING = 3,
+	THINKING = 4
+}	t_status;
+
 /*------------------------------------------------------*
 *					Function Prototypes					*
 *-------------------------------------------------------*/
@@ -108,7 +109,7 @@ void			philo_sleep(t_table *table, time_t sleep_time);
 void			sim_start_delay(time_t start_time);
 
 //	output.c
-void			write_status(t_table *t, int id, char *str, char *color);
+void			write_status(t_table *table, int id, t_status status);
 void			write_outcome(t_table *table);
 void			*error_msg(char *str, char *details, t_table *table);
 int				msg(char *str, char *detail, int exit_no);

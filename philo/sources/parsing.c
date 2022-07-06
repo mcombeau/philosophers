@@ -6,7 +6,7 @@
 /*   By: mcombeau <mcombeau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/02 11:55:16 by mcombeau          #+#    #+#             */
-/*   Updated: 2022/07/04 13:15:54 by mcombeau         ###   ########.fr       */
+/*   Updated: 2022/07/06 14:23:13 by mcombeau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ int	integer_atoi(char *str)
 		nb = nb * 10 + (str[i] - '0');
 		i++;
 	}
-	if (nb > INT_MAX || nb == 0)
+	if (nb > INT_MAX)
 		return (-1);
 	return ((int)nb);
 }
@@ -61,11 +61,17 @@ int	integer_atoi(char *str)
 bool	is_valid_input(int ac, char **av)
 {
 	int	i;
+	int	nb;
 
 	i = 1;
 	while (i < ac)
 	{
-		if (!contains_only_digits(av[i]) || integer_atoi(av[i]) == -1)
+		if (!contains_only_digits(av[i]))
+			return (msg(STR_ERR_INPUT_DIGIT, av[i], false));
+		nb = integer_atoi(av[i]);
+		if (nb == -1)
+			return (msg(STR_ERR_INPUT_DIGIT, av[i], false));
+		if (nb == 0 && i == 1)
 			return (msg(STR_ERR_INPUT_DIGIT, av[i], false));
 		i++;
 	}

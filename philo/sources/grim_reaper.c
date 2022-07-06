@@ -6,7 +6,7 @@
 /*   By: mcombeau <mcombeau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/04 12:00:18 by mcombeau          #+#    #+#             */
-/*   Updated: 2022/07/05 16:09:08 by mcombeau         ###   ########.fr       */
+/*   Updated: 2022/07/06 14:31:22 by mcombeau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,8 +40,8 @@ static bool	philo_is_dying(t_philo *philo)
 	{
 		set_sim_stop_flag(philo->table, true);
 		pthread_mutex_lock(&philo->table->write_lock);
-		printf(STR_STATUS, time - philo->table->start_time,
-			RED, philo->id + 1, STR_DIE);
+		printf("[%10ld]\t%sPhilo #%d %s\e[0m\n", time - philo->table->start_time,
+			RED, philo->id + 1, "died");
 		pthread_mutex_unlock(&philo->table->write_lock);
 		pthread_mutex_unlock(&philo->death_lock);
 		return (true);

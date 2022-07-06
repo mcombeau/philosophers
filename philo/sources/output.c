@@ -6,19 +6,33 @@
 /*   By: mcombeau <mcombeau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/02 13:20:23 by mcombeau          #+#    #+#             */
-/*   Updated: 2022/07/05 16:26:01 by mcombeau         ###   ########.fr       */
+/*   Updated: 2022/07/06 14:30:14 by mcombeau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-void	write_status(t_table *t, int id, char *str, char *color)
+static void	print_status(t_table *t, int id, char *color, char *str)
 {
 	pthread_mutex_lock(&t->write_lock);
 	if (has_simulation_stopped(t) == false)
-		printf(STR_STATUS, get_time_in_ms() - t->start_time,
+		printf("[%10ld]\t%sPhilo #%d %s\e[0m\n", get_time_in_ms() - t->start_time,
 			color, id + 1, str);
 	pthread_mutex_unlock(&t->write_lock);
+}
+
+void	write_status(t_table *table, int id, t_status status)
+{
+	if (status == DIED)
+		print_status(table, id, RED, "died");
+	else if (status == GOT_FORK)
+		print_status(table, id, PURPLE, "has taken a fork");
+	else if (status == EATING)
+		print_status(table, id, GREEN, "is eating");
+	else if (status == SLEEPING)
+		print_status(table, id, CYAN, "is sleeping");
+	else if (status == THINKING)
+		print_status(table, id, CYAN, "is thinking");
 }
 
 void	*error_msg(char *str, char *details, t_table *table)
