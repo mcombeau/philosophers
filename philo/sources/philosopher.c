@@ -6,7 +6,7 @@
 /*   By: mcombeau <mcombeau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/02 15:12:00 by mcombeau          #+#    #+#             */
-/*   Updated: 2022/07/06 14:56:07 by mcombeau         ###   ########.fr       */
+/*   Updated: 2022/07/06 16:47:44 by mcombeau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,14 @@ static void	sleep_routine(t_philo *philo)
 
 static void	think_routine(t_philo *philo)
 {
+	time_t	time_to_think;
+
+	time_to_think = philo->table->time_to_die
+		- (get_time_in_ms() - philo->last_meal)
+		- philo->table->time_to_eat
+		/ 2;
 	write_status(philo->table, philo->id, THINKING);
+	philo_sleep(philo->table, time_to_think);
 }
 
 static void	*lone_philo_routine(t_philo *philo)
@@ -60,15 +67,7 @@ void	*philosopher(void *data)
 	if (philo->table->nb_philos == 1)
 		return (lone_philo_routine(philo));
 	else if (!(philo->id % 2))
-	{
-		if (philo->table->time_to_sleep != 0)
-		{
-			sleep_routine(philo);
-			think_routine(philo);
-		}
-		else
-			philo_sleep(philo->table, 10);
-	}
+		philo_sleep(philo->table, philo->table->time_to_eat);
 	while (has_simulation_stopped(philo->table) == false)
 	{
 		eat_routine(philo);
