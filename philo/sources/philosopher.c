@@ -6,7 +6,7 @@
 /*   By: mcombeau <mcombeau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/02 15:12:00 by mcombeau          #+#    #+#             */
-/*   Updated: 2022/07/06 14:30:40 by mcombeau         ###   ########.fr       */
+/*   Updated: 2022/07/06 14:56:07 by mcombeau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,9 @@
 
 static void	eat_routine(t_philo *philo)
 {
-	pthread_mutex_lock(&philo->table->fork_locks[philo->left_fork]);
+	pthread_mutex_lock(&philo->table->fork_locks[philo->fork[0]]);
 	write_status(philo->table, philo->id, GOT_FORK);
-	pthread_mutex_lock(&philo->table->fork_locks[philo->right_fork]);
+	pthread_mutex_lock(&philo->table->fork_locks[philo->fork[1]]);
 	write_status(philo->table, philo->id, GOT_FORK);
 	write_status(philo->table, philo->id, EATING);
 	pthread_mutex_lock(&philo->death_lock);
@@ -25,8 +25,8 @@ static void	eat_routine(t_philo *philo)
 	philo_sleep(philo->table, philo->table->time_to_eat);
 	if (has_simulation_stopped(philo->table) == false)
 		philo->times_ate += 1;
-	pthread_mutex_unlock(&philo->table->fork_locks[philo->left_fork]);
-	pthread_mutex_unlock(&philo->table->fork_locks[philo->right_fork]);
+	pthread_mutex_unlock(&philo->table->fork_locks[philo->fork[0]]);
+	pthread_mutex_unlock(&philo->table->fork_locks[philo->fork[1]]);
 }
 
 static void	sleep_routine(t_philo *philo)
@@ -42,11 +42,11 @@ static void	think_routine(t_philo *philo)
 
 static void	*lone_philo_routine(t_philo *philo)
 {
-	pthread_mutex_lock(&philo->table->fork_locks[philo->left_fork]);
+	pthread_mutex_lock(&philo->table->fork_locks[philo->fork[0]]);
 	write_status(philo->table, philo->id, GOT_FORK);
 	philo_sleep(philo->table, philo->table->time_to_die);
 	write_status(philo->table, philo->id, DIED);
-	pthread_mutex_unlock(&philo->table->fork_locks[philo->left_fork]);
+	pthread_mutex_unlock(&philo->table->fork_locks[philo->fork[0]]);
 	return (NULL);
 }
 

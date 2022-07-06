@@ -6,7 +6,7 @@
 /*   By: mcombeau <mcombeau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/03 11:35:04 by mcombeau          #+#    #+#             */
-/*   Updated: 2022/07/05 11:13:38 by mcombeau         ###   ########.fr       */
+/*   Updated: 2022/07/06 14:53:52 by mcombeau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,23 @@ static pthread_mutex_t	*init_forks(t_table *table)
 	return (forks);
 }
 
+static void	assign_forks(t_philo *philo)
+{
+	unsigned int	swp;
+
+	philo->fork[0] = philo->id;
+	if (philo->table->nb_philos != 1)
+	{
+		philo->fork[1] = (philo->id + 1) % philo->table->nb_philos;
+		if (philo->id == 0)
+		{
+			swp = philo->fork[0];
+			philo->fork[0] = philo->fork[1];
+			philo->fork[1] = swp;
+		}
+	}
+}
+
 static t_philo	**init_philosophers(t_table *table)
 {
 	t_philo			**philos;
@@ -49,8 +66,7 @@ static t_philo	**init_philosophers(t_table *table)
 		philos[i]->table = table;
 		philos[i]->id = i;
 		philos[i]->times_ate = 0;
-		philos[i]->left_fork = i;
-		philos[i]->right_fork = (i + 1) % table->nb_philos;
+		assign_forks(philos[i]);
 		i++;
 	}
 	return (philos);

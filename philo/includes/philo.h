@@ -6,7 +6,7 @@
 /*   By: mcombeau <mcombeau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/29 11:46:01 by mcombeau          #+#    #+#             */
-/*   Updated: 2022/07/06 14:31:01 by mcombeau         ###   ########.fr       */
+/*   Updated: 2022/07/06 14:56:29 by mcombeau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,8 +73,7 @@ typedef struct s_philo
 	pthread_t			thread;
 	unsigned int		id;
 	unsigned int		times_ate;
-	unsigned int		left_fork;
-	unsigned int		right_fork;
+	unsigned int		fork[2];
 	pthread_mutex_t		death_lock;
 	time_t				last_meal;
 	t_table				*table;
