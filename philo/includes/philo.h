@@ -6,7 +6,7 @@
 /*   By: mcombeau <mcombeau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/29 11:46:01 by mcombeau          #+#    #+#             */
-/*   Updated: 2022/07/07 16:47:20 by mcombeau         ###   ########.fr       */
+/*   Updated: 2022/07/07 17:20:20 by mcombeau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,8 +25,8 @@
 *						Macros							*
 *-------------------------------------------------------*/
 
-# define MAX_PHILOS	1000
-# define STR_MAX_PHILOS "1000"
+# define MAX_PHILOS	250
+# define STR_MAX_PHILOS "250"
 
 # define DEBUG_FORMATTING 1
 
@@ -41,9 +41,9 @@
 <time_to_die> <time_to_eat> <time_to_sleep> \
 [number_of_times_each_philosopher_must_eat]\n"
 # define STR_ERR_INPUT_DIGIT	"%s invalid input: %s: \
-not a valid positive unsigned integer between 1 and 2147483647.\n"
+not a valid unsigned integer between 0 and 2147483647.\n"
 # define STR_ERR_INPUT_POFLOW	"%s invalid input: \
-too many philosophers, max: %s\n"
+there must be between 1 and %s philosophers.\n"
 # define STR_ERR_THREAD	"%s error: Could not create thread.\n"
 # define STR_ERR_MALLOC	"%s error: Could not allocate memory.\n"
 # define STR_ERR_MUTEX	"%s error: Could not create mutex.\n"

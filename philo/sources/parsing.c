@@ -6,7 +6,7 @@
 /*   By: mcombeau <mcombeau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/02 11:55:16 by mcombeau          #+#    #+#             */
-/*   Updated: 2022/07/06 14:23:13 by mcombeau         ###   ########.fr       */
+/*   Updated: 2022/07/07 17:19:26 by mcombeau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,9 +69,9 @@ bool	is_valid_input(int ac, char **av)
 		if (!contains_only_digits(av[i]))
 			return (msg(STR_ERR_INPUT_DIGIT, av[i], false));
 		nb = integer_atoi(av[i]);
-		if (nb == -1)
-			return (msg(STR_ERR_INPUT_DIGIT, av[i], false));
-		if (nb == 0 && i == 1)
+		if (i == 1 && (nb <= 0 || nb > MAX_PHILOS))
+			return (msg(STR_ERR_INPUT_POFLOW, STR_MAX_PHILOS, false));
+		if (i != 1 && nb == -1)
 			return (msg(STR_ERR_INPUT_DIGIT, av[i], false));
 		i++;
 	}
