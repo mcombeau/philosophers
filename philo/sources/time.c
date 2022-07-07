@@ -6,7 +6,7 @@
 /*   By: mcombeau <mcombeau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/02 14:07:22 by mcombeau          #+#    #+#             */
-/*   Updated: 2022/07/06 16:46:03 by mcombeau         ###   ########.fr       */
+/*   Updated: 2022/07/07 13:16:41 by mcombeau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ void	philo_sleep(t_table *table, time_t sleep_time)
 	{
 		if (has_simulation_stopped(table))
 			break ;
-		usleep(10);
+		usleep(100);
 	}
 }
 

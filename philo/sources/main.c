@@ -6,7 +6,7 @@
 /*   By: mcombeau <mcombeau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/29 11:46:06 by mcombeau          #+#    #+#             */
-/*   Updated: 2022/07/05 16:02:02 by mcombeau         ###   ########.fr       */
+/*   Updated: 2022/07/07 15:23:05 by mcombeau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,6 @@ static bool	start_simulation(t_table *table)
 	i = 0;
 	while (i < table->nb_philos)
 	{
-		table->philos[i]->last_meal = get_time_in_ms();
 		if (pthread_create(&table->philos[i]->thread, NULL,
 				&philosopher, table->philos[i]) != 0)
 			return (exit_error(STR_ERR_THREAD, NULL, table));
@@ -47,7 +46,7 @@ static int	stop_simulation(t_table	*table)
 	}
 	if (table->nb_philos > 1)
 		pthread_join(table->grim_reaper, NULL);
-	if (table->must_eat_count != 0)
+	if (DEBUG_FORMATTING == true && table->must_eat_count != 0)
 		write_outcome(table);
 	destroy_mutexes(table);
 	free_table(table);

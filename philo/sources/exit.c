@@ -6,17 +6,34 @@
 /*   By: mcombeau <mcombeau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/04 17:27:50 by mcombeau          #+#    #+#             */
-/*   Updated: 2022/07/04 17:30:56 by mcombeau         ###   ########.fr       */
+/*   Updated: 2022/07/07 15:22:34 by mcombeau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
+
+int	msg(char *str, char *detail, int exit_no)
+{
+	if (!detail)
+		printf(str, STR_PROG_NAME);
+	else
+		printf(str, STR_PROG_NAME, detail);
+	return (exit_no);
+}
 
 int	exit_error(char *str, char *details, t_table *table)
 {
 	if (table != NULL)
 		free_table(table);
 	return (msg(str, details, EXIT_FAILURE));
+}
+
+void	*error_msg(char *str, char *details, t_table *table)
+{
+	if (table != NULL)
+		free_table(table);
+	msg(str, details, EXIT_FAILURE);
+	return (NULL);
 }
 
 void	*free_table(t_table *table)

@@ -6,7 +6,7 @@
 /*   By: mcombeau <mcombeau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/03 11:35:04 by mcombeau          #+#    #+#             */
-/*   Updated: 2022/07/06 14:53:52 by mcombeau         ###   ########.fr       */
+/*   Updated: 2022/07/07 14:53:46 by mcombeau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,18 +32,12 @@ static pthread_mutex_t	*init_forks(t_table *table)
 
 static void	assign_forks(t_philo *philo)
 {
-	unsigned int	swp;
-
 	philo->fork[0] = philo->id;
-	if (philo->table->nb_philos != 1)
+	philo->fork[1] = (philo->id + 1) % philo->table->nb_philos;
+	if (philo->id % 2)
 	{
-		philo->fork[1] = (philo->id + 1) % philo->table->nb_philos;
-		if (philo->id == 0)
-		{
-			swp = philo->fork[0];
-			philo->fork[0] = philo->fork[1];
-			philo->fork[1] = swp;
-		}
+		philo->fork[0] = (philo->id + 1) % philo->table->nb_philos;
+		philo->fork[1] = philo->id;
 	}
 }
 

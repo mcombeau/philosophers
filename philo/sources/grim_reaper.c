@@ -6,7 +6,7 @@
 /*   By: mcombeau <mcombeau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/04 12:00:18 by mcombeau          #+#    #+#             */
-/*   Updated: 2022/07/06 14:31:22 by mcombeau         ###   ########.fr       */
+/*   Updated: 2022/07/07 14:59:26 by mcombeau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,18 +31,15 @@ bool	has_simulation_stopped(t_table *table)
 	return (r);
 }
 
-static bool	philo_is_dying(t_philo *philo)
+static bool	kill_philo(t_philo *philo)
 {
 	time_t	time;
 
 	time = get_time_in_ms();
 	if (time - philo->last_meal >= philo->table->time_to_die)
 	{
+		write_status(philo, DIED);
 		set_sim_stop_flag(philo->table, true);
-		pthread_mutex_lock(&philo->table->write_lock);
-		printf("[%10ld]\t%sPhilo #%d %s\e[0m\n", time - philo->table->start_time,
-			RED, philo->id + 1, "died");
-		pthread_mutex_unlock(&philo->table->write_lock);
 		pthread_mutex_unlock(&philo->death_lock);
 		return (true);
 	}
@@ -59,7 +56,7 @@ static bool	end_condition_reached(t_table *table)
 	while (i < table->nb_philos)
 	{
 		pthread_mutex_lock(&table->philos[i]->death_lock);
-		if (philo_is_dying(table->philos[i]))
+		if (kill_philo(table->philos[i]))
 			return (true);
 		if (table->philos[i]->times_ate < table->must_eat_count)
 			all_ate_enough = false;
@@ -80,6 +77,8 @@ void	*grim_reaper(void *data)
 
 	table = (t_table *)data;
 	sim_start_delay(table->start_time);
+	if (table->time_to_die != 0)
+		sim_start_delay(table->start_time + 5);
 	set_sim_stop_flag(table, false);
 	while (true)
 	{

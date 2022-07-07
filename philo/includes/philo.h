@@ -6,7 +6,7 @@
 /*   By: mcombeau <mcombeau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/29 11:46:01 by mcombeau          #+#    #+#             */
-/*   Updated: 2022/07/06 14:56:29 by mcombeau         ###   ########.fr       */
+/*   Updated: 2022/07/07 15:43:14 by mcombeau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,8 @@
 
 # define MAX_PHILOS	1000
 # define STR_MAX_PHILOS "1000"
+
+# define DEBUG_FORMATTING 1
 
 # define NC		"\e[0m"
 # define RED	"\e[31m"
@@ -82,10 +84,11 @@ typedef struct s_philo
 typedef enum e_status
 {
 	DIED = 0,
-	GOT_FORK = 1,
-	EATING = 2,
-	SLEEPING = 3,
-	THINKING = 4
+	EATING = 1,
+	SLEEPING = 2,
+	THINKING = 3,
+	GOT_FORK_1 = 4,
+	GOT_FORK_2 = 5
 }	t_status;
 
 /*------------------------------------------------------*
@@ -108,7 +111,7 @@ void			philo_sleep(t_table *table, time_t sleep_time);
 void			sim_start_delay(time_t start_time);
 
 //	output.c
-void			write_status(t_table *table, int id, t_status status);
+void			write_status(t_philo *philo, t_status status);
 void			write_outcome(t_table *table);
 void			*error_msg(char *str, char *details, t_table *table);
 int				msg(char *str, char *detail, int exit_no);
