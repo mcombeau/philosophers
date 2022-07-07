@@ -6,7 +6,7 @@
 /*   By: mcombeau <mcombeau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/04 12:00:18 by mcombeau          #+#    #+#             */
-/*   Updated: 2022/07/07 14:59:26 by mcombeau         ###   ########.fr       */
+/*   Updated: 2022/07/07 17:00:51 by mcombeau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,10 +36,10 @@ static bool	kill_philo(t_philo *philo)
 	time_t	time;
 
 	time = get_time_in_ms();
-	if (time - philo->last_meal >= philo->table->time_to_die)
+	if ((time - philo->last_meal) >= philo->table->time_to_die)
 	{
-		write_status(philo, DIED);
 		set_sim_stop_flag(philo->table, true);
+		write_status(philo, true, DIED);
 		pthread_mutex_unlock(&philo->death_lock);
 		return (true);
 	}
@@ -76,10 +76,8 @@ void	*grim_reaper(void *data)
 	t_table			*table;
 
 	table = (t_table *)data;
-	sim_start_delay(table->start_time);
-	if (table->time_to_die != 0)
-		sim_start_delay(table->start_time + 5);
 	set_sim_stop_flag(table, false);
+	sim_start_delay(table->start_time);
 	while (true)
 	{
 		if (end_condition_reached(table) == true)

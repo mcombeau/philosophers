@@ -6,7 +6,7 @@
 /*   By: mcombeau <mcombeau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/29 11:46:01 by mcombeau          #+#    #+#             */
-/*   Updated: 2022/07/07 15:43:14 by mcombeau         ###   ########.fr       */
+/*   Updated: 2022/07/07 16:47:20 by mcombeau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,7 +111,7 @@ void			philo_sleep(t_table *table, time_t sleep_time);
 void			sim_start_delay(time_t start_time);
 
 //	output.c
-void			write_status(t_philo *philo, t_status status);
+void			write_status(t_philo *philo, bool reaper, t_status status);
 void			write_outcome(t_table *table);
 void			*error_msg(char *str, char *details, t_table *table);
 int				msg(char *str, char *detail, int exit_no);

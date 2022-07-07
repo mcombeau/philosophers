@@ -6,7 +6,7 @@
 /*   By: mcombeau <mcombeau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/02 13:20:23 by mcombeau          #+#    #+#             */
-/*   Updated: 2022/07/07 15:25:25 by mcombeau         ###   ########.fr       */
+/*   Updated: 2022/07/07 16:50:42 by mcombeau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,34 +15,24 @@
 static void	print_status_debug(t_philo *philo, char *color,
 								char *str, t_status status)
 {
-	pthread_mutex_lock(&philo->table->write_lock);
-	if (has_simulation_stopped(philo->table) == false)
-	{
-		if (status == GOT_FORK_1)
-			printf("[%10ld]\t%s%03d\t%s\e[0m: fork [%d]\n",
-				get_time_in_ms() - philo->table->start_time,
-				color, philo->id + 1, str, philo->fork[0]);
-		else if (status == GOT_FORK_2)
-			printf("[%10ld]\t%s%03d\t%s\e[0m: fork [%d]\n",
-				get_time_in_ms() - philo->table->start_time,
-				color, philo->id + 1, str, philo->fork[1]);
-		else
-			printf("[%10ld]\t%s%03d\t%s\e[0m\n",
-				get_time_in_ms() - philo->table->start_time,
-				color, philo->id + 1, str);
-	}
-	pthread_mutex_unlock(&philo->table->write_lock);
+	if (status == GOT_FORK_1)
+		printf("[%10ld]\t%s%03d\t%s\e[0m: fork [%d]\n",
+			get_time_in_ms() - philo->table->start_time,
+			color, philo->id + 1, str, philo->fork[0]);
+	else if (status == GOT_FORK_2)
+		printf("[%10ld]\t%s%03d\t%s\e[0m: fork [%d]\n",
+			get_time_in_ms() - philo->table->start_time,
+			color, philo->id + 1, str, philo->fork[1]);
+	else
+		printf("[%10ld]\t%s%03d\t%s\e[0m\n",
+			get_time_in_ms() - philo->table->start_time,
+			color, philo->id + 1, str);
 }
 
 static void	print_status(t_philo *philo, char *str)
 {
-	pthread_mutex_lock(&philo->table->write_lock);
-	if (has_simulation_stopped(philo->table) == false)
-	{
-		printf("%ld %d %s\n", get_time_in_ms() - philo->table->start_time,
-			philo->id + 1, str);
-	}
-	pthread_mutex_unlock(&philo->table->write_lock);
+	printf("%ld %d %s\n", get_time_in_ms() - philo->table->start_time,
+		philo->id + 1, str);
 }
 
 void	write_status_debug(t_philo *philo, t_status status)
@@ -61,11 +51,18 @@ void	write_status_debug(t_philo *philo, t_status status)
 		print_status_debug(philo, PURPLE, "has taken a fork", status);
 }
 
-void	write_status(t_philo *philo, t_status status)
+void	write_status(t_philo *philo, bool reaper_report, t_status status)
 {
+	pthread_mutex_lock(&philo->table->write_lock);
+	if (has_simulation_stopped(philo->table) == true && reaper_report == false)
+	{
+		pthread_mutex_unlock(&philo->table->write_lock);
+		return ;
+	}
 	if (DEBUG_FORMATTING == true)
 	{
 		write_status_debug(philo, status);
+		pthread_mutex_unlock(&philo->table->write_lock);
 		return ;
 	}
 	if (status == DIED)
@@ -80,6 +77,7 @@ void	write_status(t_philo *philo, t_status status)
 		print_status(philo, "has taken a fork");
 	else if (status == GOT_FORK_2)
 		print_status(philo, "has taken a fork");
+	pthread_mutex_unlock(&philo->table->write_lock);
 }
 
 void	write_outcome(t_table *table)
