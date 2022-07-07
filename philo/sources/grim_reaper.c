@@ -6,7 +6,7 @@
 /*   By: mcombeau <mcombeau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/04 12:00:18 by mcombeau          #+#    #+#             */
-/*   Updated: 2022/07/07 17:00:51 by mcombeau         ###   ########.fr       */
+/*   Updated: 2022/07/07 17:34:53 by mcombeau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ static bool	kill_philo(t_philo *philo)
 	{
 		set_sim_stop_flag(philo->table, true);
 		write_status(philo, true, DIED);
-		pthread_mutex_unlock(&philo->death_lock);
+		pthread_mutex_unlock(&philo->meal_time_lock);
 		return (true);
 	}
 	return (false);
@@ -55,12 +55,12 @@ static bool	end_condition_reached(t_table *table)
 	all_ate_enough = true;
 	while (i < table->nb_philos)
 	{
-		pthread_mutex_lock(&table->philos[i]->death_lock);
+		pthread_mutex_lock(&table->philos[i]->meal_time_lock);
 		if (kill_philo(table->philos[i]))
 			return (true);
+		pthread_mutex_unlock(&table->philos[i]->meal_time_lock);
 		if (table->philos[i]->times_ate < table->must_eat_count)
 			all_ate_enough = false;
-		pthread_mutex_unlock(&table->philos[i]->death_lock);
 		i++;
 	}
 	if (table->must_eat_count != 0 && all_ate_enough == true)

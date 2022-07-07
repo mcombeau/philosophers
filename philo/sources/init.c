@@ -6,7 +6,7 @@
 /*   By: mcombeau <mcombeau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/03 11:35:04 by mcombeau          #+#    #+#             */
-/*   Updated: 2022/07/07 17:20:01 by mcombeau         ###   ########.fr       */
+/*   Updated: 2022/07/07 17:33:34 by mcombeau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ static t_philo	**init_philosophers(t_table *table)
 		philos[i] = malloc(sizeof(t_philo) * 1);
 		if (!philos[i])
 			return (error_msg(STR_ERR_MALLOC, NULL, 0));
-		if (pthread_mutex_init(&philos[i]->death_lock, 0) != 0)
+		if (pthread_mutex_init(&philos[i]->meal_time_lock, 0) != 0)
 			return (error_msg(STR_ERR_MUTEX, NULL, 0));
 		philos[i]->table = table;
 		philos[i]->id = i;

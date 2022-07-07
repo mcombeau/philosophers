@@ -6,7 +6,7 @@
 /*   By: mcombeau <mcombeau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/04 17:27:50 by mcombeau          #+#    #+#             */
-/*   Updated: 2022/07/07 15:22:34 by mcombeau         ###   ########.fr       */
+/*   Updated: 2022/07/07 17:33:34 by mcombeau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,7 @@ void	destroy_mutexes(t_table *table)
 	while (i < table->nb_philos)
 	{
 		pthread_mutex_destroy(&table->fork_locks[i]);
-		pthread_mutex_destroy(&table->philos[i]->death_lock);
+		pthread_mutex_destroy(&table->philos[i]->meal_time_lock);
 		i++;
 	}
 	pthread_mutex_destroy(&table->write_lock);

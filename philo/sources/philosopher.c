@@ -6,7 +6,7 @@
 /*   By: mcombeau <mcombeau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/02 15:12:00 by mcombeau          #+#    #+#             */
-/*   Updated: 2022/07/07 16:58:57 by mcombeau         ###   ########.fr       */
+/*   Updated: 2022/07/07 17:42:06 by mcombeau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,9 +19,9 @@ static void	eat_routine(t_philo *philo)
 	pthread_mutex_lock(&philo->table->fork_locks[philo->fork[1]]);
 	write_status(philo, false, GOT_FORK_2);
 	write_status(philo, false, EATING);
-	pthread_mutex_lock(&philo->death_lock);
+	pthread_mutex_lock(&philo->meal_time_lock);
 	philo->last_meal = get_time_in_ms();
-	pthread_mutex_unlock(&philo->death_lock);
+	pthread_mutex_unlock(&philo->meal_time_lock);
 	philo_sleep(philo->table, philo->table->time_to_eat);
 	if (has_simulation_stopped(philo->table) == false)
 		philo->times_ate += 1;
@@ -39,9 +39,11 @@ static void	think_routine(t_philo *philo, bool silent)
 {
 	time_t	time_to_think;
 
+	pthread_mutex_lock(&philo->meal_time_lock);
 	time_to_think = (philo->table->time_to_die
 			- (get_time_in_ms() - philo->last_meal)
 			- philo->table->time_to_eat) / 2;
+	pthread_mutex_unlock(&philo->meal_time_lock);
 	if (time_to_think < 0)
 		time_to_think = 0;
 	if (time_to_think == 0 && silent == true)
@@ -71,7 +73,9 @@ void	*philosopher(void *data)
 	sim_start_delay(philo->table->start_time);
 	if (philo->table->time_to_die == 0)
 		return (NULL);
+	pthread_mutex_lock(&philo->meal_time_lock);
 	philo->last_meal = get_time_in_ms();
+	pthread_mutex_unlock(&philo->meal_time_lock);
 	if (philo->table->nb_philos == 1)
 		return (lone_philo_routine(philo));
 	else if (philo->id % 2)

@@ -6,7 +6,7 @@
 /*   By: mcombeau <mcombeau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/29 11:46:01 by mcombeau          #+#    #+#             */
-/*   Updated: 2022/07/07 17:26:33 by mcombeau         ###   ########.fr       */
+/*   Updated: 2022/07/07 17:41:22 by mcombeau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@
 # define MAX_PHILOS	250
 # define STR_MAX_PHILOS "250"
 
-# define DEBUG_FORMATTING 1
+# define DEBUG_FORMATTING 0
 
 # define NC		"\e[0m"
 # define RED	"\e[31m"
@@ -76,7 +76,7 @@ typedef struct s_philo
 	unsigned int		id;
 	unsigned int		times_ate;
 	unsigned int		fork[2];
-	pthread_mutex_t		death_lock;
+	pthread_mutex_t		meal_time_lock;
 	time_t				last_meal;
 	t_table				*table;
 }	t_philo;
