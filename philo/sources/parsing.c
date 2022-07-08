@@ -6,7 +6,7 @@
 /*   By: mcombeau <mcombeau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/02 11:55:16 by mcombeau          #+#    #+#             */
-/*   Updated: 2022/07/07 17:19:26 by mcombeau         ###   ########.fr       */
+/*   Updated: 2022/07/08 12:57:03 by mcombeau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,8 @@
 
 /* contains_only_digits:
 *	Checks if a string contains only digits 0 - 9.
-*	Returns true (0) if the string only contains digits.
-*	Returns false (1) if the string contains a character that is not a digit.
+*	Returns true if the string only contains digits.
+*	Returns false if the string contains a character that is not a digit.
 */
 static bool	contains_only_digits(char *str)
 {
@@ -55,8 +55,9 @@ int	integer_atoi(char *str)
 
 /* is_valid_input:
 *	Checks if all required arguments are valid, i.e. is a string of
-*	digits only, which does not exceed INT MAX.
-*	Returns 1 if all arguments are valid, 0 if one of them is invalid.
+*	digits only, which does not exceed INT MAX. Also checks if the number
+*	of philosophers is valid (between 1 and MAX_PHILOS).
+*	Returns true if all arguments are valid, false if one of them is invalid.
 */
 bool	is_valid_input(int ac, char **av)
 {

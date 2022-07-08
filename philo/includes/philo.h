@@ -6,7 +6,7 @@
 /*   By: mcombeau <mcombeau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/29 11:46:01 by mcombeau          #+#    #+#             */
-/*   Updated: 2022/07/08 11:13:04 by mcombeau         ###   ########.fr       */
+/*   Updated: 2022/07/08 11:40:36 by mcombeau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,7 +113,7 @@ void			sim_start_delay(time_t start_time);
 //	output.c
 void			write_status(t_philo *philo, bool reaper, t_status status);
 void			write_outcome(t_table *table);
-void			*error_msg(char *str, char *details, t_table *table);
+void			*error_null(char *str, char *details, t_table *table);
 int				msg(char *str, char *detail, int exit_no);
 
 //	grim_reaper.c
@@ -121,7 +121,7 @@ void			*grim_reaper(void *data);
 bool			has_simulation_stopped(t_table *table);
 
 //	exit.c
-int				exit_error(char *str, char *details, t_table *table);
+int				error_failure(char *str, char *details, t_table *table);
 void			*free_table(t_table *table);
 void			destroy_mutexes(t_table *table);
 

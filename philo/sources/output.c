@@ -6,12 +6,18 @@
 /*   By: mcombeau <mcombeau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/02 13:20:23 by mcombeau          #+#    #+#             */
-/*   Updated: 2022/07/07 16:50:42 by mcombeau         ###   ########.fr       */
+/*   Updated: 2022/07/08 12:45:57 by mcombeau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
+/* print_status_debug:
+*	Prints the philosopher's status in an easier to read,
+*	colorful format to help with debugging. For fork-taking
+*	statuses, extra information is displayed to show which fork
+*	the philosopher has taken.
+*/
 static void	print_status_debug(t_philo *philo, char *color,
 								char *str, t_status status)
 {
@@ -29,13 +35,11 @@ static void	print_status_debug(t_philo *philo, char *color,
 			color, philo->id + 1, str);
 }
 
-static void	print_status(t_philo *philo, char *str)
-{
-	printf("%ld %d %s\n", get_time_in_ms() - philo->table->start_time,
-		philo->id + 1, str);
-}
-
-void	write_status_debug(t_philo *philo, t_status status)
+/* write_status_debug:
+*	Redirects the status writing for debug mode. For this option,
+*	the DEBUG_FORMATTING option must be set to 1 in philo.h.
+*/
+static void	write_status_debug(t_philo *philo, t_status status)
 {
 	if (status == DIED)
 		print_status_debug(philo, RED, "died", status);
@@ -51,6 +55,27 @@ void	write_status_debug(t_philo *philo, t_status status)
 		print_status_debug(philo, PURPLE, "has taken a fork", status);
 }
 
+/* print_status:
+*	Prints a philosopher's status in plain text as required by the project
+*	subject:
+*		timestamp_in_ms X status
+*/
+static void	print_status(t_philo *philo, char *str)
+{
+	printf("%ld %d %s\n", get_time_in_ms() - philo->table->start_time,
+		philo->id + 1, str);
+}
+
+/* write_status:
+*	Prints the status of a philosopher as long as the simulation is
+*	still active. Locks the write mutex to avoid intertwined messages
+*	from different threads.
+*
+*	If DEBUG_FORMATTING is set to 1 in philo.h, the status will
+*	be formatted with colors and extra information to help with debugging.
+*	Otherwise the output will be the regular format required by the project
+*	subject.
+*/
 void	write_status(t_philo *philo, bool reaper_report, t_status status)
 {
 	pthread_mutex_lock(&philo->table->write_lock);
@@ -80,6 +105,10 @@ void	write_status(t_philo *philo, bool reaper_report, t_status status)
 	pthread_mutex_unlock(&philo->table->write_lock);
 }
 
+/* write_outcome:
+*	Prints the outcome of the simulation if a number of times to
+*	eat was specified. Only used for debug purposes.
+*/
 void	write_outcome(t_table *table)
 {
 	unsigned int	i;

@@ -6,12 +6,18 @@
 /*   By: mcombeau <mcombeau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/29 11:46:06 by mcombeau          #+#    #+#             */
-/*   Updated: 2022/07/07 17:35:18 by mcombeau         ###   ########.fr       */
+/*   Updated: 2022/07/08 12:33:24 by mcombeau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
+/* start_simulation:
+*	Launches the simulation by creating a grim reaper thread as well as
+*	one thread for each philosopher.
+*	Returns true if the simulation was successfully started, false if there
+*	was an error. 
+*/
 static bool	start_simulation(t_table *table)
 {
 	unsigned int	i;
@@ -21,7 +27,7 @@ static bool	start_simulation(t_table *table)
 	{
 		if (pthread_create(&table->grim_reaper, NULL,
 				&grim_reaper, table) != 0)
-			return (exit_error(STR_ERR_THREAD, NULL, table));
+			return (error_failure(STR_ERR_THREAD, NULL, table));
 	}
 	i = 0;
 	while (i < table->nb_philos)
@@ -31,13 +37,17 @@ static bool	start_simulation(t_table *table)
 		pthread_mutex_unlock(&table->philos[i]->meal_time_lock);
 		if (pthread_create(&table->philos[i]->thread, NULL,
 				&philosopher, table->philos[i]) != 0)
-			return (exit_error(STR_ERR_THREAD, NULL, table));
+			return (error_failure(STR_ERR_THREAD, NULL, table));
 		i++;
 	}
 	return (true);
 }
 
-static int	stop_simulation(t_table	*table)
+/* stop_simulation:
+*	Waits for all threads to be joined then destroys mutexes and frees
+*	allocated memory.
+*/
+static void	stop_simulation(t_table	*table)
 {
 	unsigned int	i;
 
@@ -53,7 +63,6 @@ static int	stop_simulation(t_table	*table)
 		write_outcome(table);
 	destroy_mutexes(table);
 	free_table(table);
-	return (1);
 }
 
 int	main(int ac, char **av)
