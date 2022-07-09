@@ -6,7 +6,7 @@
 /*   By: mcombeau <mcombeau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/02 13:20:23 by mcombeau          #+#    #+#             */
-/*   Updated: 2022/07/08 12:45:57 by mcombeau         ###   ########.fr       */
+/*   Updated: 2022/07/09 13:18:55 by mcombeau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,9 +98,7 @@ void	write_status(t_philo *philo, bool reaper_report, t_status status)
 		print_status(philo, "is sleeping");
 	else if (status == THINKING)
 		print_status(philo, "is thinking");
-	else if (status == GOT_FORK_1)
-		print_status(philo, "has taken a fork");
-	else if (status == GOT_FORK_2)
+	else if (status == GOT_FORK_1 || status == GOT_FORK_2)
 		print_status(philo, "has taken a fork");
 	pthread_mutex_unlock(&philo->table->write_lock);
 }

@@ -6,7 +6,7 @@
 /*   By: mcombeau <mcombeau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/29 11:46:01 by mcombeau          #+#    #+#             */
-/*   Updated: 2022/07/08 11:40:36 by mcombeau         ###   ########.fr       */
+/*   Updated: 2022/07/09 13:19:22 by mcombeau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@
 # define MAX_PHILOS	250
 # define STR_MAX_PHILOS "250"
 
-# define DEBUG_FORMATTING 1
+# define DEBUG_FORMATTING 0
 
 # define NC		"\e[0m"
 # define RED	"\e[31m"
