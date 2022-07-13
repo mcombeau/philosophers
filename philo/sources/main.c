@@ -6,7 +6,7 @@
 /*   By: mcombeau <mcombeau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/29 11:46:06 by mcombeau          #+#    #+#             */
-/*   Updated: 2022/07/08 12:33:24 by mcombeau         ###   ########.fr       */
+/*   Updated: 2022/07/13 16:41:27 by mcombeau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,12 +23,6 @@ static bool	start_simulation(t_table *table)
 	unsigned int	i;
 
 	table->start_time = get_time_in_ms() + table->nb_philos;
-	if (table->nb_philos > 1)
-	{
-		if (pthread_create(&table->grim_reaper, NULL,
-				&grim_reaper, table) != 0)
-			return (error_failure(STR_ERR_THREAD, NULL, table));
-	}
 	i = 0;
 	while (i < table->nb_philos)
 	{
@@ -39,6 +33,12 @@ static bool	start_simulation(t_table *table)
 				&philosopher, table->philos[i]) != 0)
 			return (error_failure(STR_ERR_THREAD, NULL, table));
 		i++;
+	}
+	if (table->nb_philos > 1)
+	{
+		if (pthread_create(&table->grim_reaper, NULL,
+				&grim_reaper, table) != 0)
+			return (error_failure(STR_ERR_THREAD, NULL, table));
 	}
 	return (true);
 }

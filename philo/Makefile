@@ -28,8 +28,6 @@ $(OBJ_PATH)%.o: $(SRC_PATH)%.c
 $(NAME): $(OBJS)
 	$(CC) $(CFLAGS) $(OBJS) -o $@
 
-bonus: all
-
 clean:
 	rm -rf $(OBJ_PATH)
 

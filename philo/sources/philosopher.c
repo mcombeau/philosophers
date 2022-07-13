@@ -6,7 +6,7 @@
 /*   By: mcombeau <mcombeau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/02 15:12:00 by mcombeau          #+#    #+#             */
-/*   Updated: 2022/07/08 13:23:13 by mcombeau         ###   ########.fr       */
+/*   Updated: 2022/07/13 16:53:24 by mcombeau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,13 @@ static void	eat_routine(t_philo *philo)
 	pthread_mutex_unlock(&philo->meal_time_lock);
 	philo_sleep(philo->table, philo->table->time_to_eat);
 	if (has_simulation_stopped(philo->table) == false)
+	{
+		pthread_mutex_lock(&philo->meal_time_lock);
 		philo->times_ate += 1;
+		pthread_mutex_unlock(&philo->meal_time_lock);
+	}
+	pthread_mutex_unlock(&philo->table->fork_locks[philo->fork[1]]);
+	pthread_mutex_unlock(&philo->table->fork_locks[philo->fork[0]]);
 }
 
 /* sleep_routine:
@@ -43,8 +49,6 @@ static void	eat_routine(t_philo *philo)
 static void	sleep_routine(t_philo *philo)
 {
 	write_status(philo, false, SLEEPING);
-	pthread_mutex_unlock(&philo->table->fork_locks[philo->fork[1]]);
-	pthread_mutex_unlock(&philo->table->fork_locks[philo->fork[0]]);
 	philo_sleep(philo->table, philo->table->time_to_sleep);
 }
 
@@ -106,12 +110,12 @@ void	*philosopher(void *data)
 	t_philo	*philo;
 
 	philo = (t_philo *)data;
+	pthread_mutex_lock(&philo->meal_time_lock);
+	philo->last_meal = philo->table->start_time;
+	pthread_mutex_unlock(&philo->meal_time_lock);
 	sim_start_delay(philo->table->start_time);
 	if (philo->table->time_to_die == 0)
 		return (NULL);
-	pthread_mutex_lock(&philo->meal_time_lock);
-	philo->last_meal = get_time_in_ms();
-	pthread_mutex_unlock(&philo->meal_time_lock);
 	if (philo->table->nb_philos == 1)
 		return (lone_philo_routine(philo));
 	else if (philo->id % 2)

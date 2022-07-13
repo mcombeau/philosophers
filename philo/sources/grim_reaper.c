@@ -6,7 +6,7 @@
 /*   By: mcombeau <mcombeau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/04 12:00:18 by mcombeau          #+#    #+#             */
-/*   Updated: 2022/07/08 11:55:52 by mcombeau         ###   ########.fr       */
+/*   Updated: 2022/07/13 16:53:38 by mcombeau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,9 +83,9 @@ static bool	end_condition_reached(t_table *table)
 		pthread_mutex_lock(&table->philos[i]->meal_time_lock);
 		if (kill_philo(table->philos[i]))
 			return (true);
-		pthread_mutex_unlock(&table->philos[i]->meal_time_lock);
 		if (table->philos[i]->times_ate < table->must_eat_count)
 			all_ate_enough = false;
+		pthread_mutex_unlock(&table->philos[i]->meal_time_lock);
 		i++;
 	}
 	if (table->must_eat_count != 0 && all_ate_enough == true)
