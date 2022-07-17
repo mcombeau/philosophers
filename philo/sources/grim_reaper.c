@@ -6,7 +6,7 @@
 /*   By: mcombeau <mcombeau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/04 12:00:18 by mcombeau          #+#    #+#             */
-/*   Updated: 2022/07/13 16:53:38 by mcombeau         ###   ########.fr       */
+/*   Updated: 2022/07/17 10:46:27 by mcombeau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,19 +76,21 @@ static bool	end_condition_reached(t_table *table)
 	unsigned int	i;
 	bool			all_ate_enough;
 
-	i = 0;
 	all_ate_enough = true;
+	i = 0;
 	while (i < table->nb_philos)
 	{
 		pthread_mutex_lock(&table->philos[i]->meal_time_lock);
 		if (kill_philo(table->philos[i]))
 			return (true);
-		if (table->philos[i]->times_ate < table->must_eat_count)
-			all_ate_enough = false;
+		if (table->must_eat_count != -1)
+			if (table->philos[i]->times_ate
+				< (unsigned int)table->must_eat_count)
+				all_ate_enough = false;
 		pthread_mutex_unlock(&table->philos[i]->meal_time_lock);
 		i++;
 	}
-	if (table->must_eat_count != 0 && all_ate_enough == true)
+	if (table->must_eat_count != -1 && all_ate_enough == true)
 	{
 		set_sim_stop_flag(table, true);
 		return (true);
@@ -106,6 +108,8 @@ void	*grim_reaper(void *data)
 	t_table			*table;
 
 	table = (t_table *)data;
+	if (table->must_eat_count == 0)
+		return (NULL);
 	set_sim_stop_flag(table, false);
 	sim_start_delay(table->start_time);
 	while (true)

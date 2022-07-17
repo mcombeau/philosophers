@@ -6,7 +6,7 @@
 /*   By: mcombeau <mcombeau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/03 11:35:04 by mcombeau          #+#    #+#             */
-/*   Updated: 2022/07/08 12:28:04 by mcombeau         ###   ########.fr       */
+/*   Updated: 2022/07/17 10:36:52 by mcombeau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -132,7 +132,7 @@ t_table	*init_table(int ac, char **av, int i)
 	table->time_to_die = integer_atoi(av[i++]);
 	table->time_to_eat = integer_atoi(av[i++]);
 	table->time_to_sleep = integer_atoi(av[i++]);
-	table->must_eat_count = 0;
+	table->must_eat_count = -1;
 	if (ac - 1 == 5)
 		table->must_eat_count = integer_atoi(av[i]);
 	table->philos = init_philosophers(table);

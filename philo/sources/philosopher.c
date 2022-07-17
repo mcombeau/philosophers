@@ -6,7 +6,7 @@
 /*   By: mcombeau <mcombeau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/02 15:12:00 by mcombeau          #+#    #+#             */
-/*   Updated: 2022/07/13 16:53:24 by mcombeau         ###   ########.fr       */
+/*   Updated: 2022/07/17 10:44:20 by mcombeau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,6 +110,8 @@ void	*philosopher(void *data)
 	t_philo	*philo;
 
 	philo = (t_philo *)data;
+	if (philo->table->must_eat_count == 0)
+		return (NULL);
 	pthread_mutex_lock(&philo->meal_time_lock);
 	philo->last_meal = philo->table->start_time;
 	pthread_mutex_unlock(&philo->meal_time_lock);

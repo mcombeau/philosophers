@@ -6,7 +6,7 @@
 /*   By: mcombeau <mcombeau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/02 13:20:23 by mcombeau          #+#    #+#             */
-/*   Updated: 2022/07/09 13:18:55 by mcombeau         ###   ########.fr       */
+/*   Updated: 2022/07/17 10:40:16 by mcombeau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,7 +116,7 @@ void	write_outcome(t_table *table)
 	i = 0;
 	while (i < table->nb_philos)
 	{
-		if (table->philos[i]->times_ate >= table->must_eat_count)
+		if (table->philos[i]->times_ate >= (unsigned int)table->must_eat_count)
 			full_count++;
 		i++;
 	}

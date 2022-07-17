@@ -6,7 +6,7 @@
 /*   By: mcombeau <mcombeau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/29 11:46:01 by mcombeau          #+#    #+#             */
-/*   Updated: 2022/07/09 13:20:40 by mcombeau         ###   ########.fr       */
+/*   Updated: 2022/07/17 10:36:14 by mcombeau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,7 @@ typedef struct s_table
 	time_t			time_to_die;
 	time_t			time_to_eat;
 	time_t			time_to_sleep;
-	unsigned int	must_eat_count;
+	int				must_eat_count;
 	bool			sim_stop;
 	pthread_mutex_t	sim_stop_lock;
 	pthread_mutex_t	write_lock;

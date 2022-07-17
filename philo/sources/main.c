@@ -6,7 +6,7 @@
 /*   By: mcombeau <mcombeau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/29 11:46:06 by mcombeau          #+#    #+#             */
-/*   Updated: 2022/07/13 16:41:27 by mcombeau         ###   ########.fr       */
+/*   Updated: 2022/07/17 10:43:41 by mcombeau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ static void	stop_simulation(t_table	*table)
 	}
 	if (table->nb_philos > 1)
 		pthread_join(table->grim_reaper, NULL);
-	if (DEBUG_FORMATTING == true && table->must_eat_count != 0)
+	if (DEBUG_FORMATTING == true && table->must_eat_count != -1)
 		write_outcome(table);
 	destroy_mutexes(table);
 	free_table(table);
