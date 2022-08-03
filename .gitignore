@@ -2,3 +2,6 @@
 */*.o
 philo/philo
 philo_bonus/philo
+philo/objects
+philo_bonus/objects
+philosophers_tester/
