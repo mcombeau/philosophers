@@ -6,19 +6,19 @@
 /*   By: mcombeau <mcombeau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/02 15:12:00 by mcombeau          #+#    #+#             */
-/*   Updated: 2022/07/17 10:44:20 by mcombeau         ###   ########.fr       */
+/*   Updated: 2022/08/05 17:30:51 by mcombeau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-/* eat_routine:
+/* eat_sleep_routine:
 *	When a philosopher is ready to eat, he will wait for his fork mutexes to
 *	be unlocked before locking them. Then the philosopher will eat for a certain
 *	amount of time. The time of the last meal is recorded at the beginning of
 *	the meal, not at the end, as per the subject's requirements.
 */
-static void	eat_routine(t_philo *philo)
+static void	eat_sleep_routine(t_philo *philo)
 {
 	pthread_mutex_lock(&philo->table->fork_locks[philo->fork[0]]);
 	write_status(philo, false, GOT_FORK_1);
@@ -35,20 +35,9 @@ static void	eat_routine(t_philo *philo)
 		philo->times_ate += 1;
 		pthread_mutex_unlock(&philo->meal_time_lock);
 	}
+	write_status(philo, false, SLEEPING);
 	pthread_mutex_unlock(&philo->table->fork_locks[philo->fork[1]]);
 	pthread_mutex_unlock(&philo->table->fork_locks[philo->fork[0]]);
-}
-
-/* sleep_routine:
-*	The philosopher sleeps for time_to_sleep. Since the philosopher was
-*	eating right before sleeping, he unlocks his forks after writing his
-*	sleeping status. This is so that the next philosopher cannot pick up
-*	one of these forks before they are explicitely unlocked with this
-*	philosopher's sleep message.
-*/
-static void	sleep_routine(t_philo *philo)
-{
-	write_status(philo, false, SLEEPING);
 	philo_sleep(philo->table, philo->table->time_to_sleep);
 }
 
@@ -124,8 +113,7 @@ void	*philosopher(void *data)
 		think_routine(philo, true);
 	while (has_simulation_stopped(philo->table) == false)
 	{
-		eat_routine(philo);
-		sleep_routine(philo);
+		eat_sleep_routine(philo);
 		think_routine(philo, false);
 	}
 	return (NULL);
