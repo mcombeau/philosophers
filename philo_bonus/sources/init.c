@@ -6,7 +6,7 @@
 /*   By: mcombeau <mcombeau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/03 11:35:04 by mcombeau          #+#    #+#             */
-/*   Updated: 2022/08/05 13:51:15 by mcombeau         ###   ########.fr       */
+/*   Updated: 2022/08/05 15:51:07 by mcombeau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,13 +35,18 @@ static char	*set_meal_sem_name(unsigned int id)
 		digit_count++;
 		i /= 10;
 	}
+	tmp = ft_utoa(id, digit_count);
+	if (tmp == NULL)
+		return (NULL);
 	i = ft_strlen(SEM_NAME_MEAL) + digit_count;
 	sem_name = malloc (sizeof * sem_name * (i + 1));
 	if (sem_name == NULL)
+	{
+		free(tmp);
 		return (NULL);
+	}
 	sem_name[0] = '\0';
 	sem_name = ft_strcat(sem_name, SEM_NAME_MEAL);
-	tmp = ft_utoa(id, digit_count);
 	sem_name = ft_strcat(sem_name, tmp);
 	free(tmp);
 	return (sem_name);
