@@ -6,7 +6,7 @@
 /*   By: mcombeau <mcombeau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/29 11:46:06 by mcombeau          #+#    #+#             */
-/*   Updated: 2022/08/05 16:29:35 by mcombeau         ###   ########.fr       */
+/*   Updated: 2022/08/05 17:23:56 by mcombeau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,8 +94,8 @@ static int	get_child_philo(t_table *table, pid_t *pid)
 				table->full_count += 1;
 				*pid = 0;
 			}
-			if (exit_code == CHILD_EXIT_ERR_PTHREAD ||
-				exit_code == CHILD_EXIT_ERR_SEM)
+			if (exit_code == CHILD_EXIT_ERR_PTHREAD
+				|| exit_code == CHILD_EXIT_ERR_SEM)
 				return (kill_all_philos(table, -1));
 		}
 	}

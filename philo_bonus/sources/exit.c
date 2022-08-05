@@ -6,7 +6,7 @@
 /*   By: mcombeau <mcombeau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/04 17:27:50 by mcombeau          #+#    #+#             */
-/*   Updated: 2022/08/05 17:02:23 by mcombeau         ###   ########.fr       */
+/*   Updated: 2022/08/05 17:22:42 by mcombeau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,9 +78,5 @@ void	child_exit(t_table *table, int exit_code)
 	if (exit_code == CHILD_EXIT_ERR_PTHREAD)
 		msg(STR_ERR_THREAD, NULL, 0);
 	sem_unlink(table->this_philo->sem_meal_name);
-//	sem_close(table->this_philo->sem_meal);
-//	sem_close(table->this_philo->sem_forks);
-//	sem_close(table->this_philo->sem_write);
-//	free_table(table);
 	exit(exit_code);
 }

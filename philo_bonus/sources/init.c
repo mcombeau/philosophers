@@ -6,7 +6,7 @@
 /*   By: mcombeau <mcombeau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/03 11:35:04 by mcombeau          #+#    #+#             */
-/*   Updated: 2022/08/05 13:51:15 by mcombeau         ###   ########.fr       */
+/*   Updated: 2022/08/05 17:23:23 by mcombeau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,11 +95,11 @@ static bool	init_global_semaphores(t_table *table)
 	sem_unlink(SEM_NAME_FORKS);
 	sem_unlink(SEM_NAME_WRITE);
 	table->sem_forks = sem_open(SEM_NAME_FORKS, O_CREAT,
-								S_IRUSR | S_IWUSR, table->nb_philos);
+			S_IRUSR | S_IWUSR, table->nb_philos);
 	if (table->sem_forks == SEM_FAILED)
 		return (error_failure(STR_ERR_SEM, NULL, table));
 	table->sem_write = sem_open(SEM_NAME_WRITE, O_CREAT,
-							S_IRUSR | S_IWUSR, 1);
+			S_IRUSR | S_IWUSR, 1);
 	if (table->sem_write == SEM_FAILED)
 	{
 		sem_close(table->sem_forks);
