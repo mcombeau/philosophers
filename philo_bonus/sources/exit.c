@@ -6,7 +6,7 @@
 /*   By: mcombeau <mcombeau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/04 17:27:50 by mcombeau          #+#    #+#             */
-/*   Updated: 2022/08/05 15:27:31 by mcombeau         ###   ########.fr       */
+/*   Updated: 2022/08/05 13:44:39 by mcombeau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,19 +49,10 @@ void	*error_null(char *str, char *details, t_table *table)
 	return (NULL);
 }
 
-/* table_cleanup:
-*	Closes all semaphores and frees any allocated memory.
-*	Returns the provided exit code.
-*/
-int	table_cleanup(t_table *table, int exit_code)
+int	parent_cleanup(t_table *table, int exit_code)
 {
-	if (table == NULL)
-		return (exit_code);
-	sem_close(table->sem_forks);
-	sem_close(table->sem_write);
-	sem_unlink(SEM_NAME_FORKS);
-	sem_unlink(SEM_NAME_WRITE);
-	free_table(table);
+	if (table != NULL)
+		free_table(table);
 	return (exit_code);
 }
 
@@ -76,9 +67,6 @@ void	child_exit(t_table *table, int exit_code)
 		msg(STR_ERR_SEM, NULL, 0);
 	if (exit_code == CHILD_EXIT_ERR_PTHREAD)
 		msg(STR_ERR_THREAD, NULL, 0);
-	sem_close(table->this_philo->sem_meal);
-	sem_close(table->this_philo->sem_forks);
-	sem_close(table->this_philo->sem_write);
 //	free_table(table);
 	exit(exit_code);
 }

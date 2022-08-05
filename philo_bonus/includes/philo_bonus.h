@@ -6,7 +6,7 @@
 /*   By: mcombeau <mcombeau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/29 11:46:01 by mcombeau          #+#    #+#             */
-/*   Updated: 2022/08/05 15:01:14 by mcombeau         ###   ########.fr       */
+/*   Updated: 2022/08/05 13:50:45 by mcombeau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -156,6 +156,6 @@ void			destroy_table(t_table *table);
 int				error_failure(char *str, char *details, t_table *table);
 void			*free_table(t_table *table);
 void			child_exit(t_table *table, int exit_code);
-int				table_cleanup(t_table *table, int exit_code);
+int				parent_cleanup(t_table *table, int exit_code);
 
 #endif

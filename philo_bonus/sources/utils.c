@@ -6,7 +6,7 @@
 /*   By: mcombeau <mcombeau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/03 15:39:39 by mcombeau          #+#    #+#             */
-/*   Updated: 2022/08/05 15:48:11 by mcombeau         ###   ########.fr       */
+/*   Updated: 2022/08/05 13:54:18 by mcombeau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,9 +55,6 @@ char	*ft_utoa(unsigned int nb, size_t len)
 	char	*ret;
 
 	ret = malloc(sizeof * ret * (len + 1));
-	if (!ret)
-		return (NULL);
-	ret[0] = '\0';
 	ret[len] = '\0';
 	len--;
 	while (nb % 10)
@@ -79,6 +76,8 @@ void	*free_table(t_table *table)
 
 	if (!table)
 		return (NULL);
+	sem_close(table->sem_forks);
+	sem_close(table->sem_write);
 	if (table->philos != NULL)
 	{
 		i = 0;
