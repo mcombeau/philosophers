@@ -6,7 +6,7 @@
 /*   By: mcombeau <mcombeau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/02 14:07:22 by mcombeau          #+#    #+#             */
-/*   Updated: 2022/08/04 18:33:50 by mcombeau         ###   ########.fr       */
+/*   Updated: 2022/08/05 12:21:33 by mcombeau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,9 +25,7 @@ time_t	get_time_in_ms(void)
 }
 
 /* philo_sleep:
-*	Pauses the philosopher thread for a certain amount of time in miliseconds.
-*	Periodically checks to see if the simulation has ended during the sleep
-*	time and cuts the sleep short if it has.
+*	Pauses the philosopher process for a certain amount of time in miliseconds.
 */
 void	philo_sleep(time_t sleep_time)
 {
@@ -39,10 +37,10 @@ void	philo_sleep(time_t sleep_time)
 }
 
 /* sim_start_delay:
-*	Waits for a small delay at the beginning of each threads execution
-*	so that all threads start at the same time with the same start time
-*	reference. This ensures the grim reaper thread is synchronized with
-*	the philosopher threads.
+*	Waits for a small delay at the beginning of each process execution
+*	so that all processes start at the same time with the same start time
+*	reference. This ensures all processes and the grim reaper threads are
+*	synchronized.
 */
 void	sim_start_delay(time_t start_time)
 {

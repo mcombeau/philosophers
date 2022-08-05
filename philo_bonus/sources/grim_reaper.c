@@ -6,14 +6,17 @@
 /*   By: mcombeau <mcombeau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/04 12:00:18 by mcombeau          #+#    #+#             */
-/*   Updated: 2022/08/05 11:55:56 by mcombeau         ###   ########.fr       */
+/*   Updated: 2022/08/05 12:44:40 by mcombeau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo_bonus.h"
 
 /* kill_all_philos:
-*	TODO
+*	Sends the kill signal to all philosopher processes. Used to send the
+*	simulation if a philosopher has died or if a philosopher process has
+*	encountered a fatal error.
+*	Returns the given exit code.
 */
 int	kill_all_philos(t_table *table, int exit_code)
 {
@@ -29,10 +32,10 @@ int	kill_all_philos(t_table *table, int exit_code)
 }
 
 /* end_condition_reached:
-*	Checks each philosopher to see if one of two end conditions
-*	has been reached. Stops the simulation if a philosopher needs
-*	to be killed, or if every philosopher has eaten enough.
-*	Returns true if an end condition has been reached, false if not.
+*	Checks this philosopher to see if one of two end conditions
+*	has been reached. Exits the process with specific exit codes
+*	if the philosopher has died or has eaten enough.
+*	Returns false if the philosopher is alive and well.
 */
 static bool	end_condition_reached(t_table *table, t_philo *philo)
 {
@@ -56,9 +59,10 @@ static bool	end_condition_reached(t_table *table, t_philo *philo)
 }
 
 /* personal_grim_reaper:
-*	The grim reaper thread's routine. Checks if a philosopher must
-*	be killed and if all philosophers ate enough. If one of those two
-*	end conditions are reached, it stops the simulation.
+*	The grim reaper thread's routine. Checks if this philosopher must
+*	be killed and if he ate enough. If one of those two
+*	end conditions are reached, terminate the philosopher process
+*	with the appropriate exit code.
 */
 void	*personal_grim_reaper(void *data)
 {

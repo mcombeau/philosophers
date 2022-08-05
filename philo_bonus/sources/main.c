@@ -6,14 +6,17 @@
 /*   By: mcombeau <mcombeau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/29 11:46:06 by mcombeau          #+#    #+#             */
-/*   Updated: 2022/08/05 11:32:15 by mcombeau         ###   ########.fr       */
+/*   Updated: 2022/08/05 12:20:26 by mcombeau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo_bonus.h"
 
 /* has_simulation_stopped:
-*	TODO
+*	Checks if the simulation is about to end.
+*	Returns true if none of the process IDs were set to 0
+*	(meaning they ended with a simulation-stopping exit code)
+*	or false if none of the processes finished yet.
 */
 bool	has_simulation_stopped(t_table *table)
 {
@@ -32,10 +35,11 @@ bool	has_simulation_stopped(t_table *table)
 }
 
 /* start_simulation:
-*	Launches the simulation by creating a grim reaper thread as well as
-*	one thread for each philosopher.
+*	Launches the simulation by creating a new child process for each
+*	philosopher. The process ids are recorded to be able to wait for each
+*	child in turn, and send them a kill signal if need be.
 *	Returns true if the simulation was successfully started, false if there
-*	was an error. 
+*	was an error.
 */
 static bool	start_simulation(t_table *table)
 {
@@ -43,7 +47,6 @@ static bool	start_simulation(t_table *table)
 	pid_t			pid;
 
 	table->start_time = get_time_in_ms() + 100 + table->nb_philos * 2;
-//	table->start_time = get_time_in_ms() + table->nb_philos;
 	i = 0;
 	while (i < table->nb_philos)
 	{
@@ -66,7 +69,14 @@ static bool	start_simulation(t_table *table)
 	return (true);
 }
 
-//TODO
+/* get_child_philo:
+*	Waits for a philosopher process to exit. If the philo process
+*	exits with an error or a dead philosopher, sends the signal to
+*	kill all other child processes. If the philosopher process
+*	exited because the philosopher ate enough meals, sets the 
+*	process ID to 0 and increments the number of full philosophers
+*	by one to display a summary at the end of the simulation.
+*/
 static int	get_child_philo(t_table *table, pid_t *pid)
 {
 	int	philo_exit_code;
@@ -93,7 +103,10 @@ static int	get_child_philo(t_table *table, pid_t *pid)
 }
 
 /* stop_simulation:
-*	TODO.
+*	Waits for each child process and analyses its exit code
+*	as long as the simulation is still ongoing.
+*	Ends the simulation when one of the end conditions are fulfilled:
+*	when a philosopher dies or when all philosophers have eaten enough.
 */
 static int	stop_simulation(t_table	*table)
 {

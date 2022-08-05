@@ -6,7 +6,7 @@
 /*   By: mcombeau <mcombeau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/02 13:20:23 by mcombeau          #+#    #+#             */
-/*   Updated: 2022/08/05 11:54:41 by mcombeau         ###   ########.fr       */
+/*   Updated: 2022/08/05 12:26:49 by mcombeau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ void	print_status_debug(t_philo *philo, char *color,
 
 /* write_status_debug:
 *	Redirects the status writing for debug mode. For this option,
-*	the DEBUG_FORMATTING option must be set to 1 in philo.h.
+*	the DEBUG_FORMATTING option must be set to 1 in philo_bonus.h.
 */
 static void	write_status_debug(t_philo *philo, t_status status)
 {
@@ -67,9 +67,11 @@ void	print_status(t_philo *philo, char *str)
 }
 
 /* write_status:
-*	Prints the status of a philosopher as long as the simulation is
-*	still active. Locks the write mutex to avoid intertwined messages
-*	from different threads.
+*	Prints the status of a philosopher. Decrements the write semaphore to
+*	avoid intertwined messages from different processes. If the message comes
+*	from a grim reaper, the write semaphore is not increased again after
+*	the message is displayed in the terminal, to avoid any status messages
+*	being displayed after a philosopher has died.
 *
 *	If DEBUG_FORMATTING is set to 1 in philo.h, the status will
 *	be formatted with colors and extra information to help with debugging.

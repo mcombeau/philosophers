@@ -6,12 +6,21 @@
 /*   By: mcombeau <mcombeau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/03 11:35:04 by mcombeau          #+#    #+#             */
-/*   Updated: 2022/08/04 18:13:38 by mcombeau         ###   ########.fr       */
+/*   Updated: 2022/08/05 12:40:17 by mcombeau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo_bonus.h"
 
+/* set_meal_sem_name:
+*	Creates a unique semaphore name to create a mutex that protects
+*	a philosopher's own meal variables. The name must be unique, otherwise
+*	all philosopher processes would share the same meal semaphore.
+*	In order to create this semaphore name, simply concatenate the standard
+*	semaphore meal name with the philosopher's ID.
+*	Returns the unique semaphore name with the given ID. NULL if memory
+*	allocation fails.
+*/
 static const char	*set_meal_sem_name(unsigned int id)
 {
 	unsigned int	i;
@@ -40,6 +49,10 @@ static const char	*set_meal_sem_name(unsigned int id)
 
 /* init_philosophers:
 *	Allocates memory for each philosopher and initializes their values.
+*	Also creates specific semaphore names to protect their own meal-related
+*	variables. The semaphore names for sem_meal must be unique to each
+*	philosopher because the semaphore shouldn't be accessed by a different
+*	philosopher process.
 *	Returns a pointer to the array of philosophers or NULL if
 *	initialization failed.
 */
@@ -70,8 +83,10 @@ static t_philo	**init_philosophers(t_table *table)
 }
 
 /* init_global_semaphores:
-*	Initializes mutex locks for forks, writing and the stop simulation
-*	flag.
+*	Initializes semaphores for forks and writing. These sempahores are
+*	first opened in the parent process, but each child process will open
+*	the same named semaphores, which will allow interprocess communication
+*	through these semaphores.
 *	Returns true if the initalizations were successful, false if
 *	initilization failed.
 */

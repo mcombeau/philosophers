@@ -6,12 +6,20 @@
 /*   By: mcombeau <mcombeau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/02 15:12:00 by mcombeau          #+#    #+#             */
-/*   Updated: 2022/08/05 11:34:09 by mcombeau         ###   ########.fr       */
+/*   Updated: 2022/08/05 12:06:15 by mcombeau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo_bonus.h"
 
+/* grab_fork:
+*	Wait for the fork semaphore to allow the philosopher to take a
+*	fork. When the philosopher takes a fork, the semaphore is decreased
+*	by 1 to represent the fact that there is one less fork available
+*	in the pool of forks.
+*	There is no real distinction between the first and second fork a
+*	philosopher takes, the dictinction is made here only for debut purposes.
+*/
 static void	grab_fork(t_philo *philo)
 {
 	sem_wait(philo->sem_forks);
@@ -25,14 +33,13 @@ static void	grab_fork(t_philo *philo)
 }
 
 /* eat_sleep_routine:
-*	When a philosopher is ready to eat, he will wait for his fork mutexes to
-*	be unlocked before locking them. Then the philosopher will eat for a certain
-*	amount of time. The time of the last meal is recorded at the beginning of
-*	the meal, not at the end, as per the subject's requirements.
+*	When a philosopher is ready to eat, he will try to acquire fork semaphores.
+*	Then the philosopher will eat for a certain amount of time. The time of
+*	the last meal is recorded at the beginning of the meal, not at the end,
+*	as per the subject's requirements.
 */
 static void	eat_sleep_routine(t_philo *philo)
 {
-//	printf("Philo #%d: EATING ROUTINE\n", philo->id);
 	grab_fork(philo);
 	grab_fork(philo);
 	write_status(philo, false, EATING);
@@ -40,7 +47,6 @@ static void	eat_sleep_routine(t_philo *philo)
 	philo->last_meal = get_time_in_ms();
 	sem_post(philo->sem_meal);
 	philo_sleep(philo->table->time_to_eat);
-//	printf("Philo #%d: SLEEPING ROUTINE\n", philo->id);
 	write_status(philo, false, SLEEPING);
 	sem_post(philo->sem_forks);
 	sem_post(philo->sem_forks);
@@ -64,7 +70,6 @@ static void	think_routine(t_philo *philo, bool silent)
 {
 	time_t	time_to_think;
 
-//	printf("Philo #%d: THINKING ROUTINE\n", philo->id);
 	sem_wait(philo->sem_meal);
 	time_to_think = (philo->table->time_to_die
 			- (get_time_in_ms() - philo->last_meal)
@@ -85,8 +90,8 @@ static void	think_routine(t_philo *philo, bool silent)
 *	This routine is invoked when there is only a single philosopher.
 *	A single philosopher only has one fork, and so cannot eat. The
 *	philosopher will pick up that fork, wait as long as time_to_die and die.
-*	This is a separate routine to make sure that the thread does not get
-*	stuck waiting for the second fork in the eat routine.
+*	This is a separate routine to make sure that the process does not get
+*	stuck waiting for a fork or a writing semaphore that will never unlock.
 */
 static void	lone_philo_routine(t_philo *philo)
 {
@@ -106,10 +111,10 @@ static void	lone_philo_routine(t_philo *philo)
 
 /* philosopher:
 *	The philosopher thread routine. The philosopher must eat, sleep
-*	and think. In order to avoid conflicts between philosopher threads,
+*	and think. In order to avoid conflicts between philosopher processes,
 *	philosophers with an even id start by thinking, which delays their
 *	meal time by a small margin. This allows odd-id philosophers to
-*	grab their forks first, avoiding deadlocks.
+*	grab both of their forks first, avoiding deadlocks.
 */
 void	philosopher(t_table *table)
 {

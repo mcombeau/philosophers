@@ -6,12 +6,22 @@
 /*   By: mcombeau <mcombeau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/03 16:38:33 by mcombeau          #+#    #+#             */
-/*   Updated: 2022/08/04 18:00:20 by mcombeau         ###   ########.fr       */
+/*   Updated: 2022/08/05 12:32:09 by mcombeau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <philo_bonus.h>
 
+/* init_philo_ipc:
+*	Initializes interprocess communication between philosopher processes.
+*	Each philosopher opens the same named fork and write semaphores. These
+*	semaphores are stored in shared memory and are not duplicated for each
+*	process. Named semaphores are stored in /dev/shm on Linux systems and
+*	behave similarly to files on disk.
+*
+*	Each philosopher process also creates its own grim reaper thread which
+*	detects if the philosopher is dead or has eaten enough.
+*/
 void	init_philo_ipc(t_table *table, t_philo *philo)
 {
 	if (table->nb_philos == 1)
