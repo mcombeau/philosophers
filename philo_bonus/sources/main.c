@@ -6,7 +6,7 @@
 /*   By: mcombeau <mcombeau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/29 11:46:06 by mcombeau          #+#    #+#             */
-/*   Updated: 2022/08/05 17:23:56 by mcombeau         ###   ########.fr       */
+/*   Updated: 2022/08/05 17:28:09 by mcombeau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -129,6 +129,9 @@ static int	stop_simulation(t_table	*table)
 	return (0);
 }
 
+/* main:
+*	Main philosophers function.
+*/
 int	main(int ac, char **av)
 {
 	t_table	*table;
