@@ -6,7 +6,7 @@
 /*   By: mcombeau <mcombeau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/29 11:46:06 by mcombeau          #+#    #+#             */
-/*   Updated: 2022/08/05 12:20:26 by mcombeau         ###   ########.fr       */
+/*   Updated: 2022/08/05 13:45:19 by mcombeau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -144,6 +144,6 @@ int	main(int ac, char **av)
 	if (!start_simulation(table))
 		return (EXIT_FAILURE);
 	if (stop_simulation(table) == -1)
-		return (EXIT_FAILURE);
-	return (EXIT_SUCCESS);
+		return (parent_cleanup(table, EXIT_FAILURE));
+	return (parent_cleanup(table, EXIT_SUCCESS));
 }

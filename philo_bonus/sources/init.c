@@ -6,7 +6,7 @@
 /*   By: mcombeau <mcombeau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/03 11:35:04 by mcombeau          #+#    #+#             */
-/*   Updated: 2022/08/05 12:40:17 by mcombeau         ###   ########.fr       */
+/*   Updated: 2022/08/05 13:51:15 by mcombeau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@
 *	Returns the unique semaphore name with the given ID. NULL if memory
 *	allocation fails.
 */
-static const char	*set_meal_sem_name(unsigned int id)
+static char	*set_meal_sem_name(unsigned int id)
 {
 	unsigned int	i;
 	unsigned int	digit_count;
@@ -44,7 +44,7 @@ static const char	*set_meal_sem_name(unsigned int id)
 	tmp = ft_utoa(id, digit_count);
 	sem_name = ft_strcat(sem_name, tmp);
 	free(tmp);
-	return ((const char *)sem_name);
+	return (sem_name);
 }
 
 /* init_philosophers:

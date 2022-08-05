@@ -6,7 +6,7 @@
 /*   By: mcombeau <mcombeau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/29 11:46:01 by mcombeau          #+#    #+#             */
-/*   Updated: 2022/08/05 11:43:04 by mcombeau         ###   ########.fr       */
+/*   Updated: 2022/08/05 13:50:45 by mcombeau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,7 +92,7 @@ typedef struct s_philo
 	sem_t				*sem_forks;
 	sem_t				*sem_write;
 	sem_t				*sem_meal;
-	const char			*sem_meal_name;
+	char				*sem_meal_name;
 	unsigned int		nb_forks_held;
 	unsigned int		id;
 	unsigned int		times_ate;
@@ -156,5 +156,6 @@ void			destroy_table(t_table *table);
 int				error_failure(char *str, char *details, t_table *table);
 void			*free_table(t_table *table);
 void			child_exit(t_table *table, int exit_code);
+int				parent_cleanup(t_table *table, int exit_code);
 
 #endif

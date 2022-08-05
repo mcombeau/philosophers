@@ -6,7 +6,7 @@
 /*   By: mcombeau <mcombeau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/04 17:27:50 by mcombeau          #+#    #+#             */
-/*   Updated: 2022/08/05 12:45:51 by mcombeau         ###   ########.fr       */
+/*   Updated: 2022/08/05 13:44:39 by mcombeau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,13 @@ void	*error_null(char *str, char *details, t_table *table)
 	return (NULL);
 }
 
+int	parent_cleanup(t_table *table, int exit_code)
+{
+	if (table != NULL)
+		free_table(table);
+	return (exit_code);
+}
+
 /* child_exit:
 *	Exits a child philosopher process with the appropriate exit code.
 *	Prints an error message if the child encountered an error.
@@ -60,6 +67,6 @@ void	child_exit(t_table *table, int exit_code)
 		msg(STR_ERR_SEM, NULL, 0);
 	if (exit_code == CHILD_EXIT_ERR_PTHREAD)
 		msg(STR_ERR_THREAD, NULL, 0);
-	free_table(table);
+//	free_table(table);
 	exit(exit_code);
 }

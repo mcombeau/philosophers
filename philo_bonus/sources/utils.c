@@ -6,7 +6,7 @@
 /*   By: mcombeau <mcombeau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/03 15:39:39 by mcombeau          #+#    #+#             */
-/*   Updated: 2022/08/05 12:23:38 by mcombeau         ###   ########.fr       */
+/*   Updated: 2022/08/05 13:54:18 by mcombeau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,17 +76,25 @@ void	*free_table(t_table *table)
 
 	if (!table)
 		return (NULL);
+	sem_close(table->sem_forks);
+	sem_close(table->sem_write);
 	if (table->philos != NULL)
 	{
 		i = 0;
 		while (i < table->nb_philos)
 		{
 			if (table->philos[i] != NULL)
+			{
+				if (table->philos[i]->sem_meal_name)
+					free(table->philos[i]->sem_meal_name);
 				free(table->philos[i]);
+			}
 			i++;
 		}
 		free(table->philos);
 	}
+	if (table->pids)
+		free(table->pids);
 	free(table);
 	return (NULL);
 }
