@@ -1,5 +1,5 @@
 CC		= gcc
-CFLAGS	= -Werror -Wall -Wextra -pthread #-fsanitize=thread -g
+CFLAGS	= -Werror -Wall -Wextra -pthread -fsanitize=thread -g
 NAME	= philo_bonus
 
 SRC_PATH = sources/
