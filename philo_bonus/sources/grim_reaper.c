@@ -6,7 +6,7 @@
 /*   By: mcombeau <mcombeau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/04 12:00:18 by mcombeau          #+#    #+#             */
-/*   Updated: 2022/08/05 16:41:08 by mcombeau         ###   ########.fr       */
+/*   Updated: 2022/08/05 16:57:42 by mcombeau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,11 +43,6 @@ static bool	end_condition_reached(t_table *table, t_philo *philo)
 	if (get_time_in_ms() - philo->last_meal >= table->time_to_die)
 	{
 		write_status(philo, true, DIED);
-//		while (philo->nb_forks_held != 0)
-//		{
-//			sem_post(philo->sem_forks);
-//			philo->nb_forks_held -= 1;
-//		}
 		child_exit(table, CHILD_EXIT_PHILO_DEAD);
 	}
 	if (table->must_eat_count != -1 && philo->times_ate >= (unsigned int)table->must_eat_count)
