@@ -6,7 +6,7 @@
 /*   By: mcombeau <mcombeau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/04 12:00:18 by mcombeau          #+#    #+#             */
-/*   Updated: 2022/08/06 14:33:28 by mcombeau         ###   ########.fr       */
+/*   Updated: 2022/08/06 15:12:30 by mcombeau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,6 +98,6 @@ void	*personal_grim_reaper(void *data)
 	if (table->must_eat_count == 0)
 		return (NULL);
 	while (!end_condition_reached(table, table->this_philo))
-		usleep(5000);
+		;
 	return (NULL);
 }
