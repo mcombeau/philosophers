@@ -6,7 +6,7 @@
 /*   By: mcombeau <mcombeau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/04 17:27:50 by mcombeau          #+#    #+#             */
-/*   Updated: 2022/08/06 12:47:37 by mcombeau         ###   ########.fr       */
+/*   Updated: 2022/08/06 13:42:33 by mcombeau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,14 +57,15 @@ int	table_cleanup(t_table *table, int exit_code)
 {
 	if (table != NULL)
 	{
+		pthread_join(table->grim_reaper, NULL);
 		sem_close(table->sem_forks);
 		sem_close(table->sem_write);
 		sem_close(table->sem_philo_full);
-		sem_close(table->sem_all_ate_enough);
+		sem_close(table->sem_stop);
 		sem_unlink(SEM_NAME_FORKS);
 		sem_unlink(SEM_NAME_WRITE);
 		sem_unlink(SEM_NAME_FULL);
-		sem_unlink(SEM_NAME_ALL_ATE);
+		sem_unlink(SEM_NAME_STOP);
 		free_table(table);
 	}
 	return (exit_code);

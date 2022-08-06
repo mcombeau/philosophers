@@ -6,7 +6,7 @@
 /*   By: mcombeau <mcombeau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/04 12:00:18 by mcombeau          #+#    #+#             */
-/*   Updated: 2022/08/06 12:53:09 by mcombeau         ###   ########.fr       */
+/*   Updated: 2022/08/06 13:42:45 by mcombeau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,16 +41,21 @@ void	*global_grim_reaper(void *data)
 	t_table	*table;
 
 	table = (t_table *)data;
+	if (table->must_eat_count < 0)
+		return (NULL);
 	sim_start_delay(table->start_time + 100);
 	while (table->philo_full_count < table->nb_philos)
 	{
+		if (has_simulation_stopped(table) == true)
+			return (NULL);
 		sem_wait(table->sem_philo_full);
-		table->philo_full_count += 1;
+		if (has_simulation_stopped(table) == false)
+			table->philo_full_count += 1;
 	}
-	sem_wait(table->sem_all_ate_enough);
-	table->all_philos_full = true;
+	sem_wait(table->sem_stop);
+	table->stop_sim = true;
 	kill_all_philos(table, EXIT_SUCCESS);
-	sem_post(table->sem_all_ate_enough);
+	sem_post(table->sem_stop);
 	return (NULL);
 }
 

@@ -6,7 +6,7 @@
 /*   By: mcombeau <mcombeau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/29 11:46:06 by mcombeau          #+#    #+#             */
-/*   Updated: 2022/08/06 12:56:35 by mcombeau         ###   ########.fr       */
+/*   Updated: 2022/08/06 13:41:47 by mcombeau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,25 +20,12 @@
 */
 bool	has_simulation_stopped(t_table *table)
 {
-	unsigned int	i;
-	bool			r;
+	bool	ret;
 
-	r = true;
-	sem_wait(table->sem_all_ate_enough);
-	if (table->all_philos_full == true)
-	{
-		sem_post(table->sem_all_ate_enough);
-		return (r);
-	}
-	sem_post(table->sem_all_ate_enough);
-	i = 0;
-	while (i < table->nb_philos)
-	{
-		if (table->pids[i] != 0)
-			r = false;
-		i++;
-	}
-	return (r);
+	sem_wait(table->sem_stop);
+	ret = table->stop_sim;
+	sem_post(table->sem_stop);
+	return (ret);
 }
 
 /* start_simulation:
@@ -71,7 +58,6 @@ static bool	start_simulation(t_table *table)
 	if (pthread_create(&table->grim_reaper, NULL,
 			&global_grim_reaper, table) != 0)
 		return (error_failure(STR_ERR_THREAD, NULL, table));
-	pthread_detach(table->grim_reaper);
 	return (true);
 }
 
@@ -122,7 +108,13 @@ static int	stop_simulation(t_table	*table)
 		{
 			exit_code = get_child_philo(table, &table->pids[i]);
 			if (exit_code == 1 || exit_code == -1)
+			{
+				sem_wait(table->sem_stop);
+				table->stop_sim = true;
+				sem_post(table->sem_philo_full);
+				sem_post(table->sem_stop);
 				return (exit_code);
+			}
 			i++;
 		}
 	}

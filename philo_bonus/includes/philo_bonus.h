@@ -6,7 +6,7 @@
 /*   By: mcombeau <mcombeau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/29 11:46:01 by mcombeau          #+#    #+#             */
-/*   Updated: 2022/08/06 12:54:19 by mcombeau         ###   ########.fr       */
+/*   Updated: 2022/08/06 13:16:28 by mcombeau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,11 +54,11 @@ there must be between 1 and %s philosophers.\n"
 # define STR_ERR_SEM	"%s error: Could not create semaphore.\n"
 # define STR_ERR_FORK	"%s error: Could not fork child.\n"
 
-# define SEM_NAME_FORKS 	"/philo_global_forks"
-# define SEM_NAME_WRITE 	"/philo_global_write"
-# define SEM_NAME_FULL		"/philo_global_full"
-# define SEM_NAME_ALL_ATE	"/philo_global_all_ate_enough"
-# define SEM_NAME_MEAL		"/philo_local_meal_"
+# define SEM_NAME_FORKS "/philo_global_forks"
+# define SEM_NAME_WRITE "/philo_global_write"
+# define SEM_NAME_FULL	"/philo_global_full"
+# define SEM_NAME_STOP	"/philo_global_stop"
+# define SEM_NAME_MEAL	"/philo_local_meal_"
 
 # define CHILD_EXIT_ERR_PTHREAD	40
 # define CHILD_EXIT_ERR_SEM		41
@@ -83,8 +83,8 @@ typedef struct s_table
 	sem_t			*sem_write;
 	sem_t			*sem_philo_full;
 	unsigned int	philo_full_count;
-	sem_t			*sem_all_ate_enough;
-	bool			all_philos_full;
+	sem_t			*sem_stop;
+	bool			stop_sim;
 	t_philo			**philos;
 	t_philo			*this_philo;
 	pid_t			*pids;
