@@ -1,6 +1,14 @@
-CC		= gcc
-CFLAGS	= -Werror -Wall -Wextra -pthread -fsanitize=thread -g
 NAME	= philo
+CC		= gcc
+CFLAGS	= -Werror -Wall -Wextra -pthread
+
+BUILD	= none
+ifeq ($(BUILD), pretty)
+	CFLAGS	+= -D DEBUG_FORMATTING=1
+endif
+ifeq ($(BUILD), debug)
+	CFLAGS	+= -D DEBUG_FORMATTING=1 -fsanitize=thread -g
+endif
 
 SRC_PATH = sources/
 OBJ_PATH = objects/
