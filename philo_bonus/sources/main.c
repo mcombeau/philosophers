@@ -6,7 +6,7 @@
 /*   By: mcombeau <mcombeau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/29 11:46:06 by mcombeau          #+#    #+#             */
-/*   Updated: 2022/08/06 14:30:56 by mcombeau         ###   ########.fr       */
+/*   Updated: 2022/08/06 15:01:36 by mcombeau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,7 +116,7 @@ static int	stop_simulation(t_table	*table)
 			i++;
 		}
 	}
-	if (table->must_eat_count >= 0)
+	if (DEBUG_FORMATTING == 1 && table->must_eat_count >= 0)
 		write_outcome(table);
 	return (0);
 }
