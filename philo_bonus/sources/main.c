@@ -6,7 +6,7 @@
 /*   By: mcombeau <mcombeau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/29 11:46:06 by mcombeau          #+#    #+#             */
-/*   Updated: 2022/08/06 13:41:47 by mcombeau         ###   ########.fr       */
+/*   Updated: 2022/08/06 14:30:56 by mcombeau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,7 @@
 
 /* has_simulation_stopped:
 *	Checks if the simulation is about to end.
-*	Returns true if none of the process IDs were set to 0
-*	(meaning they ended with a simulation-stopping exit code)
-*	or false if none of the processes finished yet.
+*	Returns true if the simulation must stop, false if not.
 */
 bool	has_simulation_stopped(t_table *table)
 {
@@ -32,6 +30,9 @@ bool	has_simulation_stopped(t_table *table)
 *	Launches the simulation by creating a new child process for each
 *	philosopher. The process ids are recorded to be able to wait for each
 *	child in turn, and send them a kill signal if need be.
+*	Also creates a grim reaper thread to monitor philosophers and detect
+*	if everyone has eaten enough.
+*
 *	Returns true if the simulation was successfully started, false if there
 *	was an error.
 */
@@ -64,10 +65,7 @@ static bool	start_simulation(t_table *table)
 /* get_child_philo:
 *	Waits for a philosopher process to exit. If the philo process
 *	exits with an error or a dead philosopher, sends the signal to
-*	kill all other child processes. If the philosopher process
-*	exited because the philosopher ate enough meals, sets the 
-*	process ID to 0 and increments the number of full philosophers
-*	by one to display a summary at the end of the simulation.
+*	kill all other child processes.
 */
 static int	get_child_philo(t_table *table, pid_t *pid)
 {

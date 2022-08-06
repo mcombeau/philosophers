@@ -6,7 +6,7 @@
 /*   By: mcombeau <mcombeau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/02 15:12:00 by mcombeau          #+#    #+#             */
-/*   Updated: 2022/08/06 12:53:00 by mcombeau         ###   ########.fr       */
+/*   Updated: 2022/08/06 14:52:40 by mcombeau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,7 +95,17 @@ static void	think_routine(t_philo *philo, bool silent)
 */
 static void	lone_philo_routine(t_philo *philo)
 {
+	philo->sem_philo_full = sem_open(SEM_NAME_FULL, O_CREAT,
+			S_IRUSR | S_IWUSR, 1);
+	if (philo->sem_philo_full == SEM_FAILED)
+		exit(CHILD_EXIT_ERR_SEM);
+	sem_wait(philo->sem_philo_full);
 	sim_start_delay(philo->table->start_time);
+	if (philo->table->must_eat_count == 0)
+	{
+		sem_post(philo->sem_philo_full);
+		exit(CHILD_EXIT_PHILO_FULL);
+	}
 	if (DEBUG_FORMATTING == true)
 		print_status_debug(philo, PURPLE, "has taken a fork", GOT_FORK_1);
 	else

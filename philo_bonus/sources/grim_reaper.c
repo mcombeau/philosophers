@@ -6,7 +6,7 @@
 /*   By: mcombeau <mcombeau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/04 12:00:18 by mcombeau          #+#    #+#             */
-/*   Updated: 2022/08/06 14:06:36 by mcombeau         ###   ########.fr       */
+/*   Updated: 2022/08/06 14:33:28 by mcombeau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,8 +41,7 @@ void	*global_grim_reaper(void *data)
 	t_table	*table;
 
 	table = (t_table *)data;
-	if (table->must_eat_count < 0 || table->time_to_die == 0
-		|| table->nb_philos == 1)
+	if (table->must_eat_count < 0 || table->time_to_die == 0)
 		return (NULL);
 	sim_start_delay(table->start_time);
 	while (table->philo_full_count < table->nb_philos)
@@ -87,9 +86,8 @@ static bool	end_condition_reached(t_table *table, t_philo *philo)
 
 /* personal_grim_reaper:
 *	The grim reaper thread's routine. Checks if this philosopher must
-*	be killed and if he ate enough. If one of those two
-*	end conditions are reached, terminate the philosopher process
-*	with the appropriate exit code.
+*	be killed and if he ate enough. If the philosopher is dead,
+*	terminate the philosopher process with the appropriate exit code.
 */
 void	*personal_grim_reaper(void *data)
 {
@@ -98,7 +96,7 @@ void	*personal_grim_reaper(void *data)
 	table = (t_table *)data;
 	sim_start_delay(table->start_time);
 	if (table->must_eat_count == 0)
-		child_exit(table, CHILD_EXIT_PHILO_FULL);
+		return (NULL);
 	while (!end_condition_reached(table, table->this_philo))
 		usleep(5000);
 	return (NULL);
