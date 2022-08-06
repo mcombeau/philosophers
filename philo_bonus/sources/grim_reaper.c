@@ -6,7 +6,7 @@
 /*   By: mcombeau <mcombeau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/04 12:00:18 by mcombeau          #+#    #+#             */
-/*   Updated: 2022/08/06 13:42:45 by mcombeau         ###   ########.fr       */
+/*   Updated: 2022/08/06 14:06:36 by mcombeau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,16 +34,17 @@ int	kill_all_philos(t_table *table, int exit_code)
 /* global_grim_reaper:
 *	Kills all philosophers if each one has eaten enough. Each philosopher
 *	process decrements the sem_philo_full semaphore. This thread registers
-*	those decrementations to count how many philosophers are full.
+*	those decrementations to count how many philosophers have eaten enough.
 */
 void	*global_grim_reaper(void *data)
 {
 	t_table	*table;
 
 	table = (t_table *)data;
-	if (table->must_eat_count < 0)
+	if (table->must_eat_count < 0 || table->time_to_die == 0
+		|| table->nb_philos == 1)
 		return (NULL);
-	sim_start_delay(table->start_time + 100);
+	sim_start_delay(table->start_time);
 	while (table->philo_full_count < table->nb_philos)
 	{
 		if (has_simulation_stopped(table) == true)
@@ -61,9 +62,10 @@ void	*global_grim_reaper(void *data)
 
 /* end_condition_reached:
 *	Checks this philosopher to see if one of two end conditions
-*	has been reached. Exits the process with specific exit codes
-*	if the philosopher has died or has eaten enough.
-*	Returns false if the philosopher is alive and well.
+*	has been reached. Exits the process with a specific exit code
+*	if the philosopher has died. If the philosopher has eaten enough,
+*	marks it by decrementing a semaphore.
+*	Returns false if the philosopher is alive.
 */
 static bool	end_condition_reached(t_table *table, t_philo *philo)
 {

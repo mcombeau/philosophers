@@ -6,7 +6,7 @@
 /*   By: mcombeau <mcombeau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/04 17:27:50 by mcombeau          #+#    #+#             */
-/*   Updated: 2022/08/06 13:42:33 by mcombeau         ###   ########.fr       */
+/*   Updated: 2022/08/06 14:01:57 by mcombeau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,7 @@ void	*error_null(char *str, char *details, t_table *table)
 
 /* table_cleanup:
 *	Closes all semaphores and frees any allocated memory.
+*	Also waits for the global grim reaper thread to terminate.
 *	Returns the provided exit code.
 */
 int	table_cleanup(t_table *table, int exit_code)
