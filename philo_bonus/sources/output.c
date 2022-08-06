@@ -6,7 +6,7 @@
 /*   By: mcombeau <mcombeau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/02 13:20:23 by mcombeau          #+#    #+#             */
-/*   Updated: 2022/08/05 12:26:49 by mcombeau         ###   ########.fr       */
+/*   Updated: 2022/08/06 11:20:30 by mcombeau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,7 +110,7 @@ void	write_outcome(t_table *table)
 {
 	sem_wait(table->sem_write);
 	printf("%d/%d philosophers had at least %d meals.\n",
-		table->full_count, table->nb_philos, table->must_eat_count);
+		table->philo_full_count, table->nb_philos, table->must_eat_count);
 	sem_post(table->sem_write);
 	return ;
 }

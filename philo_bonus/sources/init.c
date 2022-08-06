@@ -6,7 +6,7 @@
 /*   By: mcombeau <mcombeau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/03 11:35:04 by mcombeau          #+#    #+#             */
-/*   Updated: 2022/08/05 17:23:23 by mcombeau         ###   ########.fr       */
+/*   Updated: 2022/08/06 12:51:41 by mcombeau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,9 +77,28 @@ static t_philo	**init_philosophers(t_table *table)
 		philos[i]->id = i;
 		philos[i]->times_ate = 0;
 		philos[i]->nb_forks_held = 0;
+		philos[i]->ate_enough = false;
 		i++;
 	}
 	return (philos);
+}
+
+/* sem_error_cleanup:
+*	Closes and unlinks all semaphores. Used only during
+*	initialization, in case a semaphore fails to be opened.
+*	Returns 0 for failure.
+*/
+static int	sem_error_cleanup(t_table *table)
+{
+	sem_close(table->sem_forks);
+	sem_close(table->sem_write);
+	sem_close(table->sem_philo_full);
+	sem_close(table->sem_all_ate_enough);
+	sem_unlink(SEM_NAME_FORKS);
+	sem_unlink(SEM_NAME_WRITE);
+	sem_unlink(SEM_NAME_FULL);
+	sem_unlink(SEM_NAME_ALL_ATE);
+	return (error_failure(STR_ERR_SEM, NULL, table));
 }
 
 /* init_global_semaphores:
@@ -94,18 +113,24 @@ static bool	init_global_semaphores(t_table *table)
 {
 	sem_unlink(SEM_NAME_FORKS);
 	sem_unlink(SEM_NAME_WRITE);
+	sem_unlink(SEM_NAME_FULL);
+	sem_unlink(SEM_NAME_ALL_ATE);
 	table->sem_forks = sem_open(SEM_NAME_FORKS, O_CREAT,
 			S_IRUSR | S_IWUSR, table->nb_philos);
 	if (table->sem_forks == SEM_FAILED)
-		return (error_failure(STR_ERR_SEM, NULL, table));
+		return (sem_error_cleanup(table));
 	table->sem_write = sem_open(SEM_NAME_WRITE, O_CREAT,
 			S_IRUSR | S_IWUSR, 1);
 	if (table->sem_write == SEM_FAILED)
-	{
-		sem_close(table->sem_forks);
-		sem_unlink(SEM_NAME_FORKS);
-		return (error_failure(STR_ERR_SEM, NULL, table));
-	}
+		return (sem_error_cleanup(table));
+	table->sem_philo_full = sem_open(SEM_NAME_FULL, O_CREAT,
+			S_IRUSR | S_IWUSR, table->nb_philos);
+	if (table->sem_philo_full == SEM_FAILED)
+		return (sem_error_cleanup(table));
+	table->sem_all_ate_enough = sem_open(SEM_NAME_ALL_ATE, O_CREAT,
+			S_IRUSR | S_IWUSR, 1);
+	if (table->sem_all_ate_enough == SEM_FAILED)
+		return (sem_error_cleanup(table));
 	return (true);
 }
 
@@ -127,7 +152,8 @@ t_table	*init_table(int ac, char **av, int i)
 	table->time_to_eat = integer_atoi(av[i++]);
 	table->time_to_sleep = integer_atoi(av[i++]);
 	table->must_eat_count = -1;
-	table->full_count = 0;
+	table->philo_full_count = 0;
+	table->all_philos_full = false;
 	if (ac - 1 == 5)
 		table->must_eat_count = integer_atoi(av[i]);
 	if (!init_global_semaphores(table))

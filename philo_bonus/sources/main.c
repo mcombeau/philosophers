@@ -6,7 +6,7 @@
 /*   By: mcombeau <mcombeau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/29 11:46:06 by mcombeau          #+#    #+#             */
-/*   Updated: 2022/08/05 17:28:09 by mcombeau         ###   ########.fr       */
+/*   Updated: 2022/08/06 12:56:35 by mcombeau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,13 @@ bool	has_simulation_stopped(t_table *table)
 	bool			r;
 
 	r = true;
+	sem_wait(table->sem_all_ate_enough);
+	if (table->all_philos_full == true)
+	{
+		sem_post(table->sem_all_ate_enough);
+		return (r);
+	}
+	sem_post(table->sem_all_ate_enough);
 	i = 0;
 	while (i < table->nb_philos)
 	{
@@ -47,25 +54,24 @@ static bool	start_simulation(t_table *table)
 	pid_t			pid;
 
 	table->start_time = get_time_in_ms() + 100 + table->nb_philos * 2;
-	i = 0;
-	while (i < table->nb_philos)
+	i = -1;
+	while (++i < table->nb_philos)
 	{
 		pid = fork();
 		if (pid == -1)
 			return (error_failure(STR_ERR_FORK, NULL, table));
 		else if (pid > 0)
-		{
 			table->pids[i] = pid;
-			table->philos[i]->pid = pid;
-		}
 		else if (pid == 0)
 		{
 			table->this_philo = table->philos[i];
 			philosopher(table);
 		}
-		i++;
 	}
-	sim_start_delay(table->start_time);
+	if (pthread_create(&table->grim_reaper, NULL,
+			&global_grim_reaper, table) != 0)
+		return (error_failure(STR_ERR_THREAD, NULL, table));
+	pthread_detach(table->grim_reaper);
 	return (true);
 }
 
@@ -89,11 +95,6 @@ static int	get_child_philo(t_table *table, pid_t *pid)
 			exit_code = WEXITSTATUS(philo_exit_code);
 			if (exit_code == CHILD_EXIT_PHILO_DEAD)
 				return (kill_all_philos(table, 1));
-			if (exit_code == CHILD_EXIT_PHILO_FULL)
-			{
-				table->full_count += 1;
-				*pid = 0;
-			}
 			if (exit_code == CHILD_EXIT_ERR_PTHREAD
 				|| exit_code == CHILD_EXIT_ERR_SEM)
 				return (kill_all_philos(table, -1));
@@ -113,7 +114,8 @@ static int	stop_simulation(t_table	*table)
 	unsigned int	i;
 	int				exit_code;
 
-	while (!has_simulation_stopped(table))
+	sim_start_delay(table->start_time);
+	while (has_simulation_stopped(table) == false)
 	{
 		i = 0;
 		while (i < table->nb_philos)

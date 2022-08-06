@@ -6,7 +6,7 @@
 /*   By: mcombeau <mcombeau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/04 12:00:18 by mcombeau          #+#    #+#             */
-/*   Updated: 2022/08/05 17:23:01 by mcombeau         ###   ########.fr       */
+/*   Updated: 2022/08/06 12:53:09 by mcombeau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,29 @@ int	kill_all_philos(t_table *table, int exit_code)
 	return (exit_code);
 }
 
+/* global_grim_reaper:
+*	Kills all philosophers if each one has eaten enough. Each philosopher
+*	process decrements the sem_philo_full semaphore. This thread registers
+*	those decrementations to count how many philosophers are full.
+*/
+void	*global_grim_reaper(void *data)
+{
+	t_table	*table;
+
+	table = (t_table *)data;
+	sim_start_delay(table->start_time + 100);
+	while (table->philo_full_count < table->nb_philos)
+	{
+		sem_wait(table->sem_philo_full);
+		table->philo_full_count += 1;
+	}
+	sem_wait(table->sem_all_ate_enough);
+	table->all_philos_full = true;
+	kill_all_philos(table, EXIT_SUCCESS);
+	sem_post(table->sem_all_ate_enough);
+	return (NULL);
+}
+
 /* end_condition_reached:
 *	Checks this philosopher to see if one of two end conditions
 *	has been reached. Exits the process with specific exit codes
@@ -45,15 +68,11 @@ static bool	end_condition_reached(t_table *table, t_philo *philo)
 		write_status(philo, true, DIED);
 		child_exit(table, CHILD_EXIT_PHILO_DEAD);
 	}
-	if (table->must_eat_count != -1
+	if (table->must_eat_count != -1 && philo->ate_enough == false
 		&& philo->times_ate >= (unsigned int)table->must_eat_count)
 	{
-		while (philo->nb_forks_held != 0)
-		{
-			sem_post(philo->sem_forks);
-			philo->nb_forks_held -= 1;
-		}
-		child_exit(table, CHILD_EXIT_PHILO_FULL);
+		sem_post(philo->sem_philo_full);
+		philo->ate_enough = true;
 	}
 	sem_post(philo->sem_meal);
 	return (false);
