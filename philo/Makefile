@@ -2,6 +2,8 @@ NAME	= philo
 CC		= gcc
 CFLAGS	= -Werror -Wall -Wextra -pthread
 
+# Run 'make re BUILD=pretty' for color formatting.
+# Run 'make re BUILD=debug' for debug formatting.
 BUILD	= none
 ifeq ($(BUILD), pretty)
 	CFLAGS	+= -D DEBUG_FORMATTING=1
