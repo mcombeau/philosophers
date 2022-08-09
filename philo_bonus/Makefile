@@ -20,10 +20,12 @@ SRC		=	main.c \
 			grim_reaper.c \
 			time.c \
 			philosopher.c \
+			philosopher_utils.c \
 			init.c \
 			utils.c \
 			ipc.c \
 			output.c \
+			cleanup.c \
 			exit.c
 SRCS	= $(addprefix $(SRC_PATH), $(SRC))
 OBJ		= $(SRC:.c=.o)

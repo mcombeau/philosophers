@@ -6,7 +6,7 @@
 /*   By: mcombeau <mcombeau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/29 11:46:01 by mcombeau          #+#    #+#             */
-/*   Updated: 2022/08/06 15:58:36 by mcombeau         ###   ########.fr       */
+/*   Updated: 2022/08/09 16:38:06 by mcombeau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,6 +61,7 @@ there must be between 1 and %s philosophers.\n"
 # define SEM_NAME_FULL	"/philo_global_full"
 # define SEM_NAME_STOP	"/philo_global_stop"
 # define SEM_NAME_MEAL	"/philo_local_meal_"
+# define SEM_NAME_DEAD	"/philo_local_dead_"
 
 # define CHILD_EXIT_ERR_PTHREAD	40
 # define CHILD_EXIT_ERR_SEM		41
@@ -101,6 +102,9 @@ typedef struct s_philo
 	sem_t				*sem_philo_full;
 	sem_t				*sem_meal;
 	char				*sem_meal_name;
+	sem_t				*sem_dead;
+	char				*sem_dead_name;
+	bool				is_dead;
 	unsigned int		nb_forks_held;
 	unsigned int		id;
 	unsigned int		times_ate;
@@ -123,6 +127,9 @@ typedef enum e_status
 *                           Function Prototypes                               *
 ******************************************************************************/
 
+//	main.c
+bool			has_simulation_stopped(t_table *table);
+
 //	parsing.c
 bool			is_valid_input(int ac, char **av);
 int				integer_atoi(char *str);
@@ -133,12 +140,16 @@ t_table			*init_table(int ac, char **av, int i);
 // ipc.c
 void			init_philo_ipc(t_table *table, t_philo *philo);
 
-//	routines.c
+//	philosopher.c
 void			philosopher(t_table *table);
+
+// philosopher_utils.c
+bool			philo_is_dead(t_philo *philo);
+void			grab_fork(t_philo *philo);
 
 //	time.c
 time_t			get_time_in_ms(void);
-void			philo_sleep(time_t sleep_time);
+void			philo_sleep(t_philo *philo, time_t sleep_time);
 void			sim_start_delay(time_t start_time);
 
 //	output.c
@@ -147,26 +158,26 @@ void			print_status(t_philo *philo, char *str);
 void			print_status_debug(t_philo *philo, char *color, char *str,
 					t_status status);
 void			write_outcome(t_table *table);
-void			*error_null(char *str, char *details, t_table *table);
-int				msg(char *str, char *detail, int exit_no);
 
 //	grim_reaper.c
 void			*global_grim_reaper(void *data);
 void			*personal_grim_reaper(void *data);
-bool			has_simulation_stopped(t_table *table);
 int				kill_all_philos(t_table *table, int exit_code);
 
 // utils.c
 char			*ft_utoa(unsigned int nb, size_t len);
 char			*ft_strcat(char	*dst, const char *src);
 size_t			ft_strlen(const char *str);
+
+// cleanup.c
 void			*free_table(t_table *table);
-void			destroy_table(t_table *table);
+int				sem_error_cleanup(t_table *table);
+int				table_cleanup(t_table *table, int exit_code);
 
 //	exit.c
-int				error_failure(char *str, char *details, t_table *table);
-void			*free_table(t_table *table);
 void			child_exit(t_table *table, int exit_code);
-int				table_cleanup(t_table *table, int exit_code);
+int				msg(char *str, char *detail, int exit_no);
+int				error_failure(char *str, char *details, t_table *table);
+void			*error_null(char *str, char *details, t_table *table);
 
 #endif

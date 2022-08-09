@@ -6,7 +6,7 @@
 /*   By: mcombeau <mcombeau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/04 12:00:18 by mcombeau          #+#    #+#             */
-/*   Updated: 2022/08/09 12:55:29 by mcombeau         ###   ########.fr       */
+/*   Updated: 2022/08/09 15:49:27 by mcombeau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,10 @@ static bool	end_condition_reached(t_table *table, t_philo *philo)
 	sem_wait(philo->sem_meal);
 	if (get_time_in_ms() - philo->last_meal >= table->time_to_die)
 	{
-		write_status(philo, true, DIED);
+		sem_wait(table->this_philo->sem_dead);
+		table->this_philo->is_dead = true;
+		sem_post(table->this_philo->sem_dead);
+		sem_post(philo->sem_meal);
 		return (true);
 	}
 	if (table->must_eat_count != -1 && philo->ate_enough == false
@@ -99,6 +102,5 @@ void	*personal_grim_reaper(void *data)
 		return (NULL);
 	while (!end_condition_reached(table, table->this_philo))
 		continue ;
-	child_exit(table, CHILD_EXIT_PHILO_DEAD);
 	return (NULL);
 }

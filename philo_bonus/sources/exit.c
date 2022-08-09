@@ -6,7 +6,7 @@
 /*   By: mcombeau <mcombeau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/04 17:27:50 by mcombeau          #+#    #+#             */
-/*   Updated: 2022/08/09 12:48:22 by mcombeau         ###   ########.fr       */
+/*   Updated: 2022/08/09 16:24:02 by mcombeau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,29 +49,6 @@ void	*error_null(char *str, char *details, t_table *table)
 	return (NULL);
 }
 
-/* table_cleanup:
-*	Closes all semaphores and frees any allocated memory.
-*	Also waits for the global grim reaper thread to terminate.
-*	Returns the provided exit code.
-*/
-int	table_cleanup(t_table *table, int exit_code)
-{
-	if (table != NULL)
-	{
-		pthread_join(table->grim_reaper, NULL);
-		sem_close(table->sem_forks);
-		sem_close(table->sem_write);
-		sem_close(table->sem_philo_full);
-		sem_close(table->sem_stop);
-		sem_unlink(SEM_NAME_FORKS);
-		sem_unlink(SEM_NAME_WRITE);
-		sem_unlink(SEM_NAME_FULL);
-		sem_unlink(SEM_NAME_STOP);
-		free_table(table);
-	}
-	return (exit_code);
-}
-
 /* child_exit:
 *	Exits a child philosopher process with the appropriate exit code.
 *	Prints an error message if the child encountered an error.
@@ -83,7 +60,11 @@ void	child_exit(t_table *table, int exit_code)
 		msg(STR_ERR_SEM, NULL, 0);
 	if (exit_code == CHILD_EXIT_ERR_PTHREAD)
 		msg(STR_ERR_THREAD, NULL, 0);
+	sem_close(table->this_philo->sem_forks);
+	sem_close(table->this_philo->sem_philo_full);
+	sem_close(table->this_philo->sem_write);
 	sem_close(table->this_philo->sem_meal);
-	sem_unlink(table->this_philo->sem_meal_name);
+	sem_close(table->this_philo->sem_dead);
+	free_table(table);
 	exit(exit_code);
 }

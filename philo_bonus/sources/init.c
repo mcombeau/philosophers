@@ -6,13 +6,13 @@
 /*   By: mcombeau <mcombeau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/03 11:35:04 by mcombeau          #+#    #+#             */
-/*   Updated: 2022/08/06 13:16:28 by mcombeau         ###   ########.fr       */
+/*   Updated: 2022/08/09 16:31:01 by mcombeau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo_bonus.h"
 
-/* set_meal_sem_name:
+/* set_local_sem_name:
 *	Creates a unique semaphore name to create a mutex that protects
 *	a philosopher's own meal variables. The name must be unique, otherwise
 *	all philosopher processes would share the same meal semaphore.
@@ -21,7 +21,7 @@
 *	Returns the unique semaphore name with the given ID. NULL if memory
 *	allocation fails.
 */
-static char	*set_meal_sem_name(unsigned int id)
+static char	*set_local_sem_name(const char *str, unsigned int id)
 {
 	unsigned int	i;
 	unsigned int	digit_count;
@@ -35,16 +35,32 @@ static char	*set_meal_sem_name(unsigned int id)
 		digit_count++;
 		i /= 10;
 	}
-	i = ft_strlen(SEM_NAME_MEAL) + digit_count;
+	i = ft_strlen(str) + digit_count;
 	sem_name = malloc (sizeof * sem_name * (i + 1));
 	if (sem_name == NULL)
 		return (NULL);
 	sem_name[0] = '\0';
-	sem_name = ft_strcat(sem_name, SEM_NAME_MEAL);
+	sem_name = ft_strcat(sem_name, str);
 	tmp = ft_utoa(id, digit_count);
 	sem_name = ft_strcat(sem_name, tmp);
 	free(tmp);
 	return (sem_name);
+}
+
+/* set_philo_sem_names:
+*	Creates unique semaphore names for semaphores that will only be shared
+*	between a philo process and its personal grim reaper thread. No other
+*	process will open the semaphores belonging to a different philo process.
+*/
+static bool	set_philo_sem_names(t_philo *philo)
+{
+	philo->sem_meal_name = set_local_sem_name(SEM_NAME_MEAL, philo->id + 1);
+	if (philo->sem_meal_name == NULL)
+		return (false);
+	philo->sem_dead_name = set_local_sem_name(SEM_NAME_DEAD, philo->id + 1);
+	if (philo->sem_dead_name == NULL)
+		return (false);
+	return (true);
 }
 
 /* init_philosophers:
@@ -70,35 +86,17 @@ static t_philo	**init_philosophers(t_table *table)
 		philos[i] = malloc(sizeof(t_philo) * 1);
 		if (!philos[i])
 			return (error_null(STR_ERR_MALLOC, NULL, 0));
-		philos[i]->sem_meal_name = set_meal_sem_name(i + 1);
-		if (philos[i]->sem_meal_name == NULL)
-			return (error_null(STR_ERR_MALLOC, NULL, 0));
 		philos[i]->table = table;
 		philos[i]->id = i;
+		if (!set_philo_sem_names(philos[i]))
+			return (error_null(STR_ERR_MALLOC, NULL, table));
 		philos[i]->times_ate = 0;
 		philos[i]->nb_forks_held = 0;
 		philos[i]->ate_enough = false;
+		philos[i]->is_dead = false;
 		i++;
 	}
 	return (philos);
-}
-
-/* sem_error_cleanup:
-*	Closes and unlinks all semaphores. Used only during
-*	initialization, in case a semaphore fails to be opened.
-*	Returns 0 for failure.
-*/
-static int	sem_error_cleanup(t_table *table)
-{
-	sem_close(table->sem_forks);
-	sem_close(table->sem_write);
-	sem_close(table->sem_philo_full);
-	sem_close(table->sem_stop);
-	sem_unlink(SEM_NAME_FORKS);
-	sem_unlink(SEM_NAME_WRITE);
-	sem_unlink(SEM_NAME_FULL);
-	sem_unlink(SEM_NAME_STOP);
-	return (error_failure(STR_ERR_SEM, NULL, table));
 }
 
 /* init_global_semaphores:

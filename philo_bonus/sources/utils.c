@@ -6,7 +6,7 @@
 /*   By: mcombeau <mcombeau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/03 15:39:39 by mcombeau          #+#    #+#             */
-/*   Updated: 2022/08/06 12:30:25 by mcombeau         ###   ########.fr       */
+/*   Updated: 2022/08/09 16:24:23 by mcombeau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,36 +63,4 @@ char	*ft_utoa(unsigned int nb, size_t len)
 		nb /= 10;
 	}
 	return (ret);
-}
-
-/* free_table:
-*	Frees all of the memory allocated by the program.
-*	Returns a NULL pointer if there is nothing to free,
-*	or when all memory has been freed.
-*/
-void	*free_table(t_table *table)
-{
-	unsigned int	i;
-
-	if (!table)
-		return (NULL);
-	if (table->philos != NULL)
-	{
-		i = 0;
-		while (i < table->nb_philos)
-		{
-			if (table->philos[i] != NULL)
-			{
-				if (table->philos[i]->sem_meal_name)
-					free(table->philos[i]->sem_meal_name);
-				free(table->philos[i]);
-			}
-			i++;
-		}
-		free(table->philos);
-	}
-	if (table->pids)
-		free(table->pids);
-	free(table);
-	return (NULL);
 }
