@@ -6,7 +6,7 @@
 /*   By: mcombeau <mcombeau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/02 13:20:23 by mcombeau          #+#    #+#             */
-/*   Updated: 2022/08/06 16:03:44 by mcombeau         ###   ########.fr       */
+/*   Updated: 2022/08/09 12:38:40 by mcombeau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,6 +108,7 @@ void	write_status(t_philo *philo, bool reaper_report, t_status status)
 */
 void	write_outcome(t_table *table)
 {
+	sem_post(table->sem_write);
 	sem_wait(table->sem_write);
 	printf("%d/%d philosophers had at least %d meals.\n",
 		table->philo_full_count, table->nb_philos, table->must_eat_count);
