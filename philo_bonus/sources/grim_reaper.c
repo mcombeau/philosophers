@@ -6,7 +6,7 @@
 /*   By: mcombeau <mcombeau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/04 12:00:18 by mcombeau          #+#    #+#             */
-/*   Updated: 2022/08/06 15:12:30 by mcombeau         ###   ########.fr       */
+/*   Updated: 2022/08/09 12:55:29 by mcombeau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,7 @@ static bool	end_condition_reached(t_table *table, t_philo *philo)
 	if (get_time_in_ms() - philo->last_meal >= table->time_to_die)
 	{
 		write_status(philo, true, DIED);
-		child_exit(table, CHILD_EXIT_PHILO_DEAD);
+		return (true);
 	}
 	if (table->must_eat_count != -1 && philo->ate_enough == false
 		&& philo->times_ate >= (unsigned int)table->must_eat_count)
@@ -98,6 +98,7 @@ void	*personal_grim_reaper(void *data)
 	if (table->must_eat_count == 0)
 		return (NULL);
 	while (!end_condition_reached(table, table->this_philo))
-		;
+		continue ;
+	child_exit(table, CHILD_EXIT_PHILO_DEAD);
 	return (NULL);
 }
