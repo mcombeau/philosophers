@@ -6,7 +6,7 @@
 /*   By: mcombeau <mcombeau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/03 11:35:04 by mcombeau          #+#    #+#             */
-/*   Updated: 2022/07/17 10:36:52 by mcombeau         ###   ########.fr       */
+/*   Updated: 2022/08/09 23:24:47 by mcombeau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,7 +77,7 @@ static t_philo	**init_philosophers(t_table *table)
 	t_philo			**philos;
 	unsigned int	i;
 
-	philos = malloc(sizeof(t_philo) * (table->nb_philos + 1));
+	philos = malloc(sizeof(t_philo) * table->nb_philos);
 	if (!philos)
 		return (error_null(STR_ERR_MALLOC, NULL, 0));
 	i = 0;
