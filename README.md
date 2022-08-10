@@ -1,5 +1,9 @@
 # philosophers
 
+<p align="center">
+  <img src="https://github.com/mcombeau/mcombeau/blob/main/42_badges/philosophersn.png" alt="Philosophers 42 project badge"/>
+</p>
+
 Philosophers is a 42 school project designed around Edsger Dijkstra's famous dining philosophers problem. For this project, we must learn about concurrent programming. For the project's mandatory part, we must find a solution to the problem using only threads and mutexes. For the bonus part, we must create a second program that uses processes and semaphores.
 
 ---
