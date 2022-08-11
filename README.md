@@ -8,9 +8,13 @@ Philosophers is a 42 school project designed around Edsger Dijkstra's famous din
 
 ---
 
-:us: Read my article in English about this project: [Philosophers 01: Threads and Mutexes](https://www.codequoi.com/en/philosophers-01-threads-and-mutexes/)
+:us: Read my articles in English about this project:
+* [Philosophers 01: Threads and Mutexes](https://www.codequoi.com/en/philosophers-01-threads-and-mutexes/)
+* [Philosophers 02: Processes and Semaphores](https://www.codequoi.com/en/philosophers-02-processes-and-semaphores/)
 
-:fr: Lire mon article en français sur ce projet :  [Philosophers 01 : threads et mutex](https://www.codequoi.com/philosophers-01-threads-et-mutex/)
+:fr: Lire mes articles en français sur ce projet :
+* [Philosophers 01 : threads et mutex](https://www.codequoi.com/philosophers-01-threads-et-mutex/)
+* [Philosophers 02 : processus et sémaphores](https://www.codequoi.com/philosophers-02-processus-et-semaphores/)
 
 ---
 
