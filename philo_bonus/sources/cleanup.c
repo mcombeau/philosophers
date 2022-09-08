@@ -6,7 +6,7 @@
 /*   By: mcombeau <mcombeau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/09 16:23:21 by mcombeau          #+#    #+#             */
-/*   Updated: 2022/08/09 16:24:57 by mcombeau         ###   ########.fr       */
+/*   Updated: 2022/09/08 14:23:20 by mcombeau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,8 +32,6 @@ void	*free_table(t_table *table)
 			{
 				if (table->philos[i]->sem_meal_name)
 					free(table->philos[i]->sem_meal_name);
-				if (table->philos[i]->sem_dead_name)
-					free(table->philos[i]->sem_dead_name);
 				free(table->philos[i]);
 			}
 			i++;
@@ -56,11 +54,9 @@ int	sem_error_cleanup(t_table *table)
 	sem_close(table->sem_forks);
 	sem_close(table->sem_write);
 	sem_close(table->sem_philo_full);
+	sem_close(table->sem_philo_dead);
 	sem_close(table->sem_stop);
-	sem_unlink(SEM_NAME_FORKS);
-	sem_unlink(SEM_NAME_WRITE);
-	sem_unlink(SEM_NAME_FULL);
-	sem_unlink(SEM_NAME_STOP);
+	unlink_global_sems();
 	return (error_failure(STR_ERR_SEM, NULL, table));
 }
 
@@ -73,15 +69,12 @@ int	table_cleanup(t_table *table, int exit_code)
 {
 	if (table != NULL)
 	{
-		pthread_join(table->grim_reaper, NULL);
 		sem_close(table->sem_forks);
 		sem_close(table->sem_write);
 		sem_close(table->sem_philo_full);
+		sem_close(table->sem_philo_dead);
 		sem_close(table->sem_stop);
-		sem_unlink(SEM_NAME_FORKS);
-		sem_unlink(SEM_NAME_WRITE);
-		sem_unlink(SEM_NAME_FULL);
-		sem_unlink(SEM_NAME_STOP);
+		unlink_global_sems();
 		free_table(table);
 	}
 	return (exit_code);

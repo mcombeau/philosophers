@@ -6,7 +6,7 @@
 /*   By: mcombeau <mcombeau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/03 11:35:04 by mcombeau          #+#    #+#             */
-/*   Updated: 2022/08/09 16:31:01 by mcombeau         ###   ########.fr       */
+/*   Updated: 2022/09/08 14:23:51 by mcombeau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,9 +57,6 @@ static bool	set_philo_sem_names(t_philo *philo)
 	philo->sem_meal_name = set_local_sem_name(SEM_NAME_MEAL, philo->id + 1);
 	if (philo->sem_meal_name == NULL)
 		return (false);
-	philo->sem_dead_name = set_local_sem_name(SEM_NAME_DEAD, philo->id + 1);
-	if (philo->sem_dead_name == NULL)
-		return (false);
 	return (true);
 }
 
@@ -93,7 +90,6 @@ static t_philo	**init_philosophers(t_table *table)
 		philos[i]->times_ate = 0;
 		philos[i]->nb_forks_held = 0;
 		philos[i]->ate_enough = false;
-		philos[i]->is_dead = false;
 		i++;
 	}
 	return (philos);
@@ -109,10 +105,7 @@ static t_philo	**init_philosophers(t_table *table)
 */
 static bool	init_global_semaphores(t_table *table)
 {
-	sem_unlink(SEM_NAME_FORKS);
-	sem_unlink(SEM_NAME_WRITE);
-	sem_unlink(SEM_NAME_FULL);
-	sem_unlink(SEM_NAME_STOP);
+	unlink_global_sems();
 	table->sem_forks = sem_open(SEM_NAME_FORKS, O_CREAT,
 			S_IRUSR | S_IWUSR, table->nb_philos);
 	if (table->sem_forks == SEM_FAILED)
@@ -124,6 +117,10 @@ static bool	init_global_semaphores(t_table *table)
 	table->sem_philo_full = sem_open(SEM_NAME_FULL, O_CREAT,
 			S_IRUSR | S_IWUSR, table->nb_philos);
 	if (table->sem_philo_full == SEM_FAILED)
+		return (sem_error_cleanup(table));
+	table->sem_philo_dead = sem_open(SEM_NAME_DEAD, O_CREAT,
+			S_IRUSR | S_IWUSR, table->nb_philos);
+	if (table->sem_philo_dead == SEM_FAILED)
 		return (sem_error_cleanup(table));
 	table->sem_stop = sem_open(SEM_NAME_STOP, O_CREAT,
 			S_IRUSR | S_IWUSR, 1);

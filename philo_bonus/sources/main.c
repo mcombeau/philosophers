@@ -6,7 +6,7 @@
 /*   By: mcombeau <mcombeau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/29 11:46:06 by mcombeau          #+#    #+#             */
-/*   Updated: 2022/08/09 15:47:37 by mcombeau         ###   ########.fr       */
+/*   Updated: 2022/09/08 14:32:49 by mcombeau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,9 +56,8 @@ static bool	start_simulation(t_table *table)
 			philosopher(table);
 		}
 	}
-	if (pthread_create(&table->grim_reaper, NULL,
-			&global_grim_reaper, table) != 0)
-		return (error_failure(STR_ERR_THREAD, NULL, table));
+	if (start_grim_reaper_threads(table) == false)
+		return (false);
 	return (true);
 }
 

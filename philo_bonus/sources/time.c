@@ -6,7 +6,7 @@
 /*   By: mcombeau <mcombeau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/02 14:07:22 by mcombeau          #+#    #+#             */
-/*   Updated: 2022/08/09 16:00:01 by mcombeau         ###   ########.fr       */
+/*   Updated: 2022/09/08 13:23:54 by mcombeau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,17 +27,13 @@ time_t	get_time_in_ms(void)
 /* philo_sleep:
 *	Pauses the philosopher process for a certain amount of time in miliseconds.
 */
-void	philo_sleep(t_philo *philo, time_t sleep_time)
+void	philo_sleep(time_t sleep_time)
 {
 	time_t	wake_up;
 
-	if (philo_is_dead(philo))
-		return ;
 	wake_up = get_time_in_ms() + sleep_time;
 	while (get_time_in_ms() < wake_up)
 	{
-		if (philo_is_dead(philo))
-			break ;
 		usleep(100);
 	}
 }

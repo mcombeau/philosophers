@@ -6,7 +6,7 @@
 /*   By: mcombeau <mcombeau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/02 15:12:00 by mcombeau          #+#    #+#             */
-/*   Updated: 2022/08/09 16:10:24 by mcombeau         ###   ########.fr       */
+/*   Updated: 2022/09/08 14:54:15 by mcombeau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,19 +20,13 @@
 */
 static void	eat_sleep_routine(t_philo *philo)
 {
-	if (philo_is_dead(philo))
-		return ;
 	grab_fork(philo);
 	grab_fork(philo);
-	if (philo_is_dead(philo))
-		return ;
 	write_status(philo, false, EATING);
 	sem_wait(philo->sem_meal);
 	philo->last_meal = get_time_in_ms();
 	sem_post(philo->sem_meal);
-	philo_sleep(philo, philo->table->time_to_eat);
-	if (philo_is_dead(philo))
-		return ;
+	philo_sleep(philo->table->time_to_eat);
 	write_status(philo, false, SLEEPING);
 	sem_post(philo->sem_forks);
 	sem_post(philo->sem_forks);
@@ -40,7 +34,7 @@ static void	eat_sleep_routine(t_philo *philo)
 	philo->nb_forks_held -= 2;
 	philo->times_ate += 1;
 	sem_post(philo->sem_meal);
-	philo_sleep(philo, philo->table->time_to_sleep);
+	philo_sleep(philo->table->time_to_sleep);
 }
 
 /* think_routine:
@@ -56,8 +50,6 @@ static void	think_routine(t_philo *philo, bool silent)
 {
 	time_t	time_to_think;
 
-	if (philo_is_dead(philo))
-		return ;
 	sem_wait(philo->sem_meal);
 	time_to_think = (philo->table->time_to_die
 			- (get_time_in_ms() - philo->last_meal)
@@ -71,7 +63,7 @@ static void	think_routine(t_philo *philo, bool silent)
 		time_to_think = 200;
 	if (silent == false)
 		write_status(philo, false, THINKING);
-	philo_sleep(philo, time_to_think);
+	philo_sleep(time_to_think);
 }
 
 /* lone_philo_routine:
@@ -98,7 +90,7 @@ static void	lone_philo_routine(t_philo *philo)
 		print_status_debug(philo, PURPLE, "has taken a fork", GOT_FORK_1);
 	else
 		print_status(philo, "has taken a fork");
-	philo_sleep(philo, philo->table->time_to_die);
+	philo_sleep(philo->table->time_to_die);
 	if (DEBUG_FORMATTING == true)
 		print_status_debug(philo, RED, "died", DIED);
 	else
@@ -113,14 +105,9 @@ static void	lone_philo_routine(t_philo *philo)
 */
 static void	philosopher_routine(t_philo *philo)
 {
-	if (philo->table->time_to_die == 0)
-	{
-		write_status(philo, true, DIED);
-		child_exit(philo->table, CHILD_EXIT_PHILO_DEAD);
-	}
 	if (philo->id % 2)
 		think_routine(philo, true);
-	while (philo_is_dead(philo) == false)
+	while (1)
 	{
 		eat_sleep_routine(philo);
 		think_routine(philo, false);
@@ -150,8 +137,4 @@ void	philosopher(t_table *table)
 	sem_wait(philo->sem_philo_full);
 	sim_start_delay(philo->table->start_time);
 	philosopher_routine(philo);
-	write_status(philo, true, DIED);
-	sem_wait(philo->sem_write);
-	pthread_join(philo->personal_grim_reaper, NULL);
-	child_exit(table, CHILD_EXIT_PHILO_DEAD);
 }

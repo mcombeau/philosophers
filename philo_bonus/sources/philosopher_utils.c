@@ -6,7 +6,7 @@
 /*   By: mcombeau <mcombeau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/09 13:53:19 by mcombeau          #+#    #+#             */
-/*   Updated: 2022/08/09 16:37:07 by mcombeau         ###   ########.fr       */
+/*   Updated: 2022/09/08 13:59:39 by mcombeau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,8 +22,6 @@
 */
 void	grab_fork(t_philo *philo)
 {
-	if (philo_is_dead(philo))
-		return ;
 	sem_wait(philo->sem_forks);
 	sem_wait(philo->sem_meal);
 	if (philo->nb_forks_held <= 0)
@@ -32,20 +30,4 @@ void	grab_fork(t_philo *philo)
 		write_status(philo, false, GOT_FORK_2);
 	philo->nb_forks_held += 1;
 	sem_post(philo->sem_meal);
-}
-
-/* philo_is_dead:
-*	Checks whether the calling philosopher is dead.
-*	Returns true if the philosopher is dead, false if not.
-*/
-bool	philo_is_dead(t_philo *philo)
-{
-	bool	r;
-
-	r = true;
-	sem_wait(philo->sem_dead);
-	if (philo->is_dead == false)
-		r = false;
-	sem_post(philo->sem_dead);
-	return (r);
 }

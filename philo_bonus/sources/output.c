@@ -6,7 +6,7 @@
 /*   By: mcombeau <mcombeau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/02 13:20:23 by mcombeau          #+#    #+#             */
-/*   Updated: 2022/08/09 15:47:15 by mcombeau         ###   ########.fr       */
+/*   Updated: 2022/09/08 14:20:25 by mcombeau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,13 +80,12 @@ void	print_status(t_philo *philo, char *str)
 */
 void	write_status(t_philo *philo, bool reaper_report, t_status status)
 {
-	if (philo_is_dead(philo) && !reaper_report)
-		return ;
 	sem_wait(philo->sem_write);
 	if (DEBUG_FORMATTING == true)
 	{
 		write_status_debug(philo, status);
-		sem_post(philo->sem_write);
+		if (!reaper_report)
+			sem_post(philo->sem_write);
 		return ;
 	}
 	if (status == DIED)
@@ -99,7 +98,8 @@ void	write_status(t_philo *philo, bool reaper_report, t_status status)
 		print_status(philo, "is thinking");
 	else if (status == GOT_FORK_1 || status == GOT_FORK_2)
 		print_status(philo, "has taken a fork");
-	sem_post(philo->sem_write);
+	if (!reaper_report)
+		sem_post(philo->sem_write);
 }
 
 /* write_outcome:

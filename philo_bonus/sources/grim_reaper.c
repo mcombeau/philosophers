@@ -6,7 +6,7 @@
 /*   By: mcombeau <mcombeau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/04 12:00:18 by mcombeau          #+#    #+#             */
-/*   Updated: 2022/08/09 15:49:27 by mcombeau         ###   ########.fr       */
+/*   Updated: 2022/09/08 14:54:13 by mcombeau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,12 +36,13 @@ int	kill_all_philos(t_table *table, int exit_code)
 *	process decrements the sem_philo_full semaphore. This thread registers
 *	those decrementations to count how many philosophers have eaten enough.
 */
-void	*global_grim_reaper(void *data)
+void	*global_gluttony_reaper(void *data)
 {
 	t_table	*table;
 
 	table = (t_table *)data;
-	if (table->must_eat_count < 0 || table->time_to_die == 0)
+	if (table->must_eat_count < 0 || table->time_to_die == 0
+		|| table->nb_philos == 1)
 		return (NULL);
 	sim_start_delay(table->start_time);
 	while (table->philo_full_count < table->nb_philos)
@@ -52,6 +53,27 @@ void	*global_grim_reaper(void *data)
 		if (has_simulation_stopped(table) == false)
 			table->philo_full_count += 1;
 	}
+	sem_wait(table->sem_stop);
+	table->stop_sim = true;
+	kill_all_philos(table, EXIT_SUCCESS);
+	sem_post(table->sem_stop);
+	return (NULL);
+}
+
+/* global_famine_reaper:
+*	Kills all philosophers if one has died. Each philosopher
+*	process decrements the sem_philo_dead semaphore upon philo death.
+*	This thread registers the first decrementation and kills all philos.
+*/
+void	*global_famine_reaper(void *data)
+{
+	t_table	*table;
+
+	table = (t_table *)data;
+	if (table->nb_philos == 1)
+		return (NULL);
+	sim_start_delay(table->start_time);
+	sem_wait(table->sem_philo_dead);
 	sem_wait(table->sem_stop);
 	table->stop_sim = true;
 	kill_all_philos(table, EXIT_SUCCESS);
@@ -71,9 +93,8 @@ static bool	end_condition_reached(t_table *table, t_philo *philo)
 	sem_wait(philo->sem_meal);
 	if (get_time_in_ms() - philo->last_meal >= table->time_to_die)
 	{
-		sem_wait(table->this_philo->sem_dead);
-		table->this_philo->is_dead = true;
-		sem_post(table->this_philo->sem_dead);
+		write_status(philo, true, DIED);
+		sem_post(table->this_philo->sem_philo_dead);
 		sem_post(philo->sem_meal);
 		return (true);
 	}
@@ -97,6 +118,7 @@ void	*personal_grim_reaper(void *data)
 	t_table			*table;
 
 	table = (t_table *)data;
+	sem_wait(table->this_philo->sem_philo_dead);
 	sim_start_delay(table->start_time);
 	if (table->must_eat_count == 0)
 		return (NULL);

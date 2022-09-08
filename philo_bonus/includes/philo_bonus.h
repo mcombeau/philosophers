@@ -6,7 +6,7 @@
 /*   By: mcombeau <mcombeau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/29 11:46:01 by mcombeau          #+#    #+#             */
-/*   Updated: 2022/08/09 16:38:06 by mcombeau         ###   ########.fr       */
+/*   Updated: 2022/09/08 14:26:12 by mcombeau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,9 +59,9 @@ there must be between 1 and %s philosophers.\n"
 # define SEM_NAME_FORKS "/philo_global_forks"
 # define SEM_NAME_WRITE "/philo_global_write"
 # define SEM_NAME_FULL	"/philo_global_full"
+# define SEM_NAME_DEAD	"/philo_global_dead"
 # define SEM_NAME_STOP	"/philo_global_stop"
 # define SEM_NAME_MEAL	"/philo_local_meal_"
-# define SEM_NAME_DEAD	"/philo_local_dead_"
 
 # define CHILD_EXIT_ERR_PTHREAD	40
 # define CHILD_EXIT_ERR_SEM		41
@@ -86,12 +86,14 @@ typedef struct s_table
 	sem_t			*sem_write;
 	sem_t			*sem_philo_full;
 	unsigned int	philo_full_count;
+	sem_t			*sem_philo_dead;
 	sem_t			*sem_stop;
 	bool			stop_sim;
 	t_philo			**philos;
 	t_philo			*this_philo;
 	pid_t			*pids;
-	pthread_t		grim_reaper;
+	pthread_t		gluttony_reaper;
+	pthread_t		famine_reaper;
 }	t_table;
 
 typedef struct s_philo
@@ -100,11 +102,9 @@ typedef struct s_philo
 	sem_t				*sem_forks;
 	sem_t				*sem_write;
 	sem_t				*sem_philo_full;
+	sem_t				*sem_philo_dead;
 	sem_t				*sem_meal;
 	char				*sem_meal_name;
-	sem_t				*sem_dead;
-	char				*sem_dead_name;
-	bool				is_dead;
 	unsigned int		nb_forks_held;
 	unsigned int		id;
 	unsigned int		times_ate;
@@ -144,12 +144,11 @@ void			init_philo_ipc(t_table *table, t_philo *philo);
 void			philosopher(t_table *table);
 
 // philosopher_utils.c
-bool			philo_is_dead(t_philo *philo);
 void			grab_fork(t_philo *philo);
 
 //	time.c
 time_t			get_time_in_ms(void);
-void			philo_sleep(t_philo *philo, time_t sleep_time);
+void			philo_sleep(time_t sleep_time);
 void			sim_start_delay(time_t start_time);
 
 //	output.c
@@ -160,7 +159,8 @@ void			print_status_debug(t_philo *philo, char *color, char *str,
 void			write_outcome(t_table *table);
 
 //	grim_reaper.c
-void			*global_grim_reaper(void *data);
+void			*global_gluttony_reaper(void *data);
+void			*global_famine_reaper(void *data);
 void			*personal_grim_reaper(void *data);
 int				kill_all_philos(t_table *table, int exit_code);
 
@@ -168,6 +168,8 @@ int				kill_all_philos(t_table *table, int exit_code);
 char			*ft_utoa(unsigned int nb, size_t len);
 char			*ft_strcat(char	*dst, const char *src);
 size_t			ft_strlen(const char *str);
+void			unlink_global_sems(void);
+bool			start_grim_reaper_threads(t_table *table);
 
 // cleanup.c
 void			*free_table(t_table *table);

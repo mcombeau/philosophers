@@ -6,7 +6,7 @@
 /*   By: mcombeau <mcombeau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/03 16:38:33 by mcombeau          #+#    #+#             */
-/*   Updated: 2022/08/09 16:22:27 by mcombeau         ###   ########.fr       */
+/*   Updated: 2022/09/08 14:23:49 by mcombeau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,10 @@ static bool	philo_open_global_semaphores(t_philo *philo)
 			S_IRUSR | S_IWUSR, philo->table->nb_philos);
 	if (philo->sem_philo_full == SEM_FAILED)
 		return (false);
+	philo->sem_philo_dead = sem_open(SEM_NAME_DEAD, O_CREAT,
+			S_IRUSR | S_IWUSR, philo->table->nb_philos);
+	if (philo->sem_philo_dead == SEM_FAILED)
+		return (false);
 	return (true);
 }
 
@@ -55,12 +59,7 @@ static bool	philo_open_local_semaphores(t_philo *philo)
 			S_IRUSR | S_IWUSR, 1);
 	if (philo->sem_meal == SEM_FAILED)
 		return (false);
-	philo->sem_dead = sem_open(philo->sem_dead_name, O_CREAT,
-			S_IRUSR | S_IWUSR, 1);
-	if (philo->sem_dead == SEM_FAILED)
-		return (false);
 	sem_unlink(philo->sem_meal_name);
-	sem_unlink(philo->sem_dead_name);
 	return (true);
 }
 
