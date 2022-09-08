@@ -6,7 +6,7 @@
 /*   By: mcombeau <mcombeau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/03 15:39:39 by mcombeau          #+#    #+#             */
-/*   Updated: 2022/09/08 14:25:48 by mcombeau         ###   ########.fr       */
+/*   Updated: 2022/09/08 15:41:54 by mcombeau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,10 +79,8 @@ bool	start_grim_reaper_threads(t_table *table)
 	if (pthread_create(&table->gluttony_reaper, NULL,
 			&global_gluttony_reaper, table) != 0)
 		return (error_failure(STR_ERR_THREAD, NULL, table));
-	pthread_detach(table->gluttony_reaper);
 	if (pthread_create(&table->famine_reaper, NULL,
 			&global_famine_reaper, table) != 0)
 		return (error_failure(STR_ERR_THREAD, NULL, table));
-	pthread_detach(table->famine_reaper);
 	return (true);
 }

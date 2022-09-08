@@ -6,7 +6,7 @@
 /*   By: mcombeau <mcombeau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/09 16:23:21 by mcombeau          #+#    #+#             */
-/*   Updated: 2022/09/08 14:23:20 by mcombeau         ###   ########.fr       */
+/*   Updated: 2022/09/08 15:42:38 by mcombeau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,6 +69,8 @@ int	table_cleanup(t_table *table, int exit_code)
 {
 	if (table != NULL)
 	{
+		pthread_join(table->famine_reaper, NULL);
+		pthread_join(table->gluttony_reaper, NULL);
 		sem_close(table->sem_forks);
 		sem_close(table->sem_write);
 		sem_close(table->sem_philo_full);

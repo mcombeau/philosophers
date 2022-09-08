@@ -6,7 +6,7 @@
 /*   By: mcombeau <mcombeau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/04 12:00:18 by mcombeau          #+#    #+#             */
-/*   Updated: 2022/09/08 14:54:13 by mcombeau         ###   ########.fr       */
+/*   Updated: 2022/09/08 15:44:01 by mcombeau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,6 +57,7 @@ void	*global_gluttony_reaper(void *data)
 	table->stop_sim = true;
 	kill_all_philos(table, EXIT_SUCCESS);
 	sem_post(table->sem_stop);
+	sem_post(table->sem_philo_dead);
 	return (NULL);
 }
 
@@ -74,10 +75,13 @@ void	*global_famine_reaper(void *data)
 		return (NULL);
 	sim_start_delay(table->start_time);
 	sem_wait(table->sem_philo_dead);
+	if (has_simulation_stopped(table) == true)
+		return (NULL);
 	sem_wait(table->sem_stop);
 	table->stop_sim = true;
 	kill_all_philos(table, EXIT_SUCCESS);
 	sem_post(table->sem_stop);
+	sem_post(table->sem_philo_full);
 	return (NULL);
 }
 
