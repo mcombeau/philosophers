@@ -6,7 +6,7 @@
 /*   By: mcombeau <mcombeau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/04 12:00:18 by mcombeau          #+#    #+#             */
-/*   Updated: 2022/09/08 15:44:01 by mcombeau         ###   ########.fr       */
+/*   Updated: 2022/09/09 11:52:08 by mcombeau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,8 @@ void	*global_gluttony_reaper(void *data)
 		sem_wait(table->sem_philo_full);
 		if (has_simulation_stopped(table) == false)
 			table->philo_full_count += 1;
+		else
+			return (NULL);
 	}
 	sem_wait(table->sem_stop);
 	table->stop_sim = true;
