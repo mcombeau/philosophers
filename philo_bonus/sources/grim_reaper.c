@@ -6,7 +6,7 @@
 /*   By: mcombeau <mcombeau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/04 12:00:18 by mcombeau          #+#    #+#             */
-/*   Updated: 2022/09/09 11:52:08 by mcombeau         ###   ########.fr       */
+/*   Updated: 2022/09/10 15:55:47 by mcombeau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,7 @@ void	*global_gluttony_reaper(void *data)
 	if (table->must_eat_count < 0 || table->time_to_die == 0
 		|| table->nb_philos == 1)
 		return (NULL);
+	init_philo_full_sem(table);
 	sim_start_delay(table->start_time);
 	while (table->philo_full_count < table->nb_philos)
 	{
@@ -75,6 +76,7 @@ void	*global_famine_reaper(void *data)
 	table = (t_table *)data;
 	if (table->nb_philos == 1)
 		return (NULL);
+	init_philo_dead_sem(table);
 	sim_start_delay(table->start_time);
 	sem_wait(table->sem_philo_dead);
 	if (has_simulation_stopped(table) == true)
@@ -124,11 +126,13 @@ void	*personal_grim_reaper(void *data)
 	t_table			*table;
 
 	table = (t_table *)data;
-	sem_wait(table->this_philo->sem_philo_dead);
-	sim_start_delay(table->start_time);
 	if (table->must_eat_count == 0)
 		return (NULL);
+	sim_start_delay(table->start_time);
 	while (!end_condition_reached(table, table->this_philo))
+	{
+		usleep(1000);
 		continue ;
+	}
 	return (NULL);
 }

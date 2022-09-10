@@ -6,7 +6,7 @@
 /*   By: mcombeau <mcombeau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/04 17:27:50 by mcombeau          #+#    #+#             */
-/*   Updated: 2022/09/08 14:32:30 by mcombeau         ###   ########.fr       */
+/*   Updated: 2022/09/10 15:55:16 by mcombeau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,6 +56,7 @@ void	*error_null(char *str, char *details, t_table *table)
 void	child_exit(t_table *table, int exit_code)
 {
 	sem_post(table->this_philo->sem_meal);
+	pthread_join(table->this_philo->personal_grim_reaper, NULL);
 	if (exit_code == CHILD_EXIT_ERR_SEM)
 		msg(STR_ERR_SEM, NULL, 0);
 	if (exit_code == CHILD_EXIT_ERR_PTHREAD)

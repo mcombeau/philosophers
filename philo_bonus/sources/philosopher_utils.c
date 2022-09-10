@@ -6,7 +6,7 @@
 /*   By: mcombeau <mcombeau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/09 13:53:19 by mcombeau          #+#    #+#             */
-/*   Updated: 2022/09/08 13:59:39 by mcombeau         ###   ########.fr       */
+/*   Updated: 2022/09/10 15:32:50 by mcombeau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,4 +30,28 @@ void	grab_fork(t_philo *philo)
 		write_status(philo, false, GOT_FORK_2);
 	philo->nb_forks_held += 1;
 	sem_post(philo->sem_meal);
+}
+
+void	init_philo_full_sem(t_table *table)
+{
+	unsigned int	i;
+
+	i = 1;
+	while (i <= table->nb_philos)
+	{
+		sem_wait(table->sem_philo_full);
+		i++;
+	}
+}
+
+void	init_philo_dead_sem(t_table *table)
+{
+	unsigned int	i;
+
+	i = 1;
+	while (i <= table->nb_philos)
+	{
+		sem_wait(table->sem_philo_dead);
+		i++;
+	}
 }
