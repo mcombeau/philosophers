@@ -6,7 +6,7 @@
 /*   By: mcombeau <mcombeau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/04 12:00:18 by mcombeau          #+#    #+#             */
-/*   Updated: 2022/09/05 14:45:49 by mcombeau         ###   ########.fr       */
+/*   Updated: 2022/09/10 15:05:19 by mcombeau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,6 +116,7 @@ void	*grim_reaper(void *data)
 	{
 		if (end_condition_reached(table) == true)
 			return (NULL);
+		usleep(1000);
 	}
 	return (NULL);
 }
