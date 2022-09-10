@@ -6,7 +6,7 @@
 /*   By: mcombeau <mcombeau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/29 11:46:06 by mcombeau          #+#    #+#             */
-/*   Updated: 2022/09/05 14:45:28 by mcombeau         ###   ########.fr       */
+/*   Updated: 2022/09/10 16:13:10 by mcombeau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ static bool	start_simulation(t_table *table)
 {
 	unsigned int	i;
 
-	table->start_time = get_time_in_ms() + (table->nb_philos * 10);
+	table->start_time = get_time_in_ms() + (table->nb_philos * 2 * 10);
 	i = 0;
 	while (i < table->nb_philos)
 	{
