@@ -6,7 +6,7 @@
 /*   By: mcombeau <mcombeau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/02 15:12:00 by mcombeau          #+#    #+#             */
-/*   Updated: 2022/09/10 15:51:52 by mcombeau         ###   ########.fr       */
+/*   Updated: 2022/09/10 16:37:27 by mcombeau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,7 @@ static void	think_routine(t_philo *philo, bool silent)
 static void	lone_philo_routine(t_philo *philo)
 {
 	philo->sem_philo_full = sem_open(SEM_NAME_FULL, O_CREAT,
-			S_IRUSR | S_IWUSR, 1);
+			S_IRUSR | S_IWUSR, philo->table->nb_philos);
 	if (philo->sem_philo_full == SEM_FAILED)
 		exit(CHILD_EXIT_ERR_SEM);
 	sem_wait(philo->sem_philo_full);
@@ -137,7 +137,6 @@ void	philosopher(t_table *table)
 	sem_wait(philo->sem_meal);
 	philo->last_meal = philo->table->start_time;
 	sem_post(philo->sem_meal);
-//	sem_wait(philo->sem_philo_full);
 	sim_start_delay(philo->table->start_time);
 	philosopher_routine(philo);
 }

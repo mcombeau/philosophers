@@ -6,7 +6,7 @@
 /*   By: mcombeau <mcombeau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/29 11:46:06 by mcombeau          #+#    #+#             */
-/*   Updated: 2022/09/10 15:20:05 by mcombeau         ###   ########.fr       */
+/*   Updated: 2022/09/10 16:37:27 by mcombeau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ static bool	start_simulation(t_table *table)
 	unsigned int	i;
 	pid_t			pid;
 
-	table->start_time = get_time_in_ms() + ((100 + table->nb_philos) * 10);
+	table->start_time = get_time_in_ms() + ((table->nb_philos * 2) * 10);
 	i = -1;
 	while (++i < table->nb_philos)
 	{
@@ -81,6 +81,11 @@ static int	get_child_philo(t_table *table, pid_t *pid)
 			if (exit_code == CHILD_EXIT_ERR_PTHREAD
 				|| exit_code == CHILD_EXIT_ERR_SEM)
 				return (kill_all_philos(table, -1));
+			if (exit_code == CHILD_EXIT_PHILO_FULL)
+			{
+				table->philo_full_count += 1;
+				return (1);
+			}
 		}
 	}
 	return (0);
