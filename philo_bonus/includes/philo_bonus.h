@@ -6,7 +6,7 @@
 /*   By: mcombeau <mcombeau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/29 11:46:01 by mcombeau          #+#    #+#             */
-/*   Updated: 2022/09/10 15:33:24 by mcombeau         ###   ########.fr       */
+/*   Updated: 2022/09/11 14:26:45 by mcombeau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -145,8 +145,6 @@ void			philosopher(t_table *table);
 
 // philosopher_utils.c
 void			grab_fork(t_philo *philo);
-void			init_philo_full_sem(t_table *table);
-void			init_philo_dead_sem(t_table *table);
 
 //	time.c
 time_t			get_time_in_ms(void);

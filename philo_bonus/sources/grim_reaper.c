@@ -6,7 +6,7 @@
 /*   By: mcombeau <mcombeau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/04 12:00:18 by mcombeau          #+#    #+#             */
-/*   Updated: 2022/09/10 16:37:26 by mcombeau         ###   ########.fr       */
+/*   Updated: 2022/09/11 14:27:09 by mcombeau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,6 @@ void	*global_gluttony_reaper(void *data)
 	if (table->must_eat_count < 0 || table->time_to_die == 0
 		|| table->nb_philos == 1)
 		return (NULL);
-	init_philo_full_sem(table);
 	sim_start_delay(table->start_time);
 	while (table->philo_full_count < table->nb_philos)
 	{
@@ -59,8 +58,8 @@ void	*global_gluttony_reaper(void *data)
 	sem_wait(table->sem_stop);
 	table->stop_sim = true;
 	kill_all_philos(table, EXIT_SUCCESS);
-	sem_post(table->sem_stop);
 	sem_post(table->sem_philo_dead);
+	sem_post(table->sem_stop);
 	return (NULL);
 }
 
@@ -76,16 +75,17 @@ void	*global_famine_reaper(void *data)
 	table = (t_table *)data;
 	if (table->nb_philos == 1)
 		return (NULL);
-	init_philo_dead_sem(table);
 	sim_start_delay(table->start_time);
+	if (has_simulation_stopped(table) == true)
+		return (NULL);
 	sem_wait(table->sem_philo_dead);
 	if (has_simulation_stopped(table) == true)
 		return (NULL);
 	sem_wait(table->sem_stop);
 	table->stop_sim = true;
 	kill_all_philos(table, EXIT_SUCCESS);
-	sem_post(table->sem_stop);
 	sem_post(table->sem_philo_full);
+	sem_post(table->sem_stop);
 	return (NULL);
 }
 
@@ -128,6 +128,8 @@ void	*personal_grim_reaper(void *data)
 	table = (t_table *)data;
 	if (table->must_eat_count == 0)
 		return (NULL);
+	sem_wait(table->this_philo->sem_philo_dead);
+	sem_wait(table->this_philo->sem_philo_full);
 	sim_start_delay(table->start_time);
 	while (!end_condition_reached(table, table->this_philo))
 	{

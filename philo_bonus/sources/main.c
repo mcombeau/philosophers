@@ -6,7 +6,7 @@
 /*   By: mcombeau <mcombeau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/29 11:46:06 by mcombeau          #+#    #+#             */
-/*   Updated: 2022/09/10 16:37:27 by mcombeau         ###   ########.fr       */
+/*   Updated: 2022/09/11 13:53:52 by mcombeau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,6 +114,7 @@ static int	stop_simulation(t_table	*table)
 				sem_wait(table->sem_stop);
 				table->stop_sim = true;
 				sem_post(table->sem_philo_full);
+				sem_post(table->sem_philo_dead);
 				sem_post(table->sem_stop);
 				return (exit_code);
 			}

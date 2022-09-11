@@ -6,7 +6,7 @@
 /*   By: mcombeau <mcombeau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/02 15:12:00 by mcombeau          #+#    #+#             */
-/*   Updated: 2022/09/10 16:37:27 by mcombeau         ###   ########.fr       */
+/*   Updated: 2022/09/11 14:26:10 by mcombeau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -133,6 +133,11 @@ void	philosopher(t_table *table)
 	{
 		sem_post(philo->sem_philo_full);
 		child_exit(table, CHILD_EXIT_PHILO_FULL);
+	}
+	if (philo->table->time_to_die == 0)
+	{
+		sem_post(philo->sem_philo_dead);
+		child_exit(table, CHILD_EXIT_PHILO_DEAD);
 	}
 	sem_wait(philo->sem_meal);
 	philo->last_meal = philo->table->start_time;

@@ -1,5 +1,5 @@
 CC		= gcc
-CFLAGS	= -Werror -Wall -Wextra -pthread
+CFLAGS	= -Werror -Wall -Wextra -pthread -g
 NAME	= philo_bonus
 
 # Run 'make re BUILD=pretty' for color formatting.
