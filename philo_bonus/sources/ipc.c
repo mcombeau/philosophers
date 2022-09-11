@@ -6,7 +6,7 @@
 /*   By: mcombeau <mcombeau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/03 16:38:33 by mcombeau          #+#    #+#             */
-/*   Updated: 2022/09/11 14:24:48 by mcombeau         ###   ########.fr       */
+/*   Updated: 2022/09/11 14:35:02 by mcombeau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@
 *		- Fork semaphore,
 *		- Write semaphore,
 *		- Full/philo ate enough semaphore.
+*		- Dead/philo is dead semaphore.
 *	Returns true if all semaphores were successfilly opened, false if
 *	one semaphore failed to open.
 */

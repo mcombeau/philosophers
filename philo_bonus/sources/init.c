@@ -6,7 +6,7 @@
 /*   By: mcombeau <mcombeau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/03 11:35:04 by mcombeau          #+#    #+#             */
-/*   Updated: 2022/09/11 14:25:07 by mcombeau         ###   ########.fr       */
+/*   Updated: 2022/09/11 14:36:39 by mcombeau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,10 +96,11 @@ static t_philo	**init_philosophers(t_table *table)
 }
 
 /* init_global_semaphores:
-*	Initializes semaphores for forks and writing. These sempahores are
-*	first opened in the parent process, but each child process will open
-*	the same named semaphores, which will allow interprocess communication
-*	through these semaphores.
+*	Initializes semaphores for forks, writing, fullness and death detection.
+*	These sempahores are first opened in the parent process, but each child
+*	process will open the same named semaphores, which will allow interprocess
+*	communication through these semaphores.
+*
 *	Returns true if the initalizations were successful, false if
 *	initilization failed.
 */

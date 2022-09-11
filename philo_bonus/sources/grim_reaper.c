@@ -6,7 +6,7 @@
 /*   By: mcombeau <mcombeau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/04 12:00:18 by mcombeau          #+#    #+#             */
-/*   Updated: 2022/09/11 14:27:09 by mcombeau         ###   ########.fr       */
+/*   Updated: 2022/09/11 14:33:53 by mcombeau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,10 +31,11 @@ int	kill_all_philos(t_table *table, int exit_code)
 	return (exit_code);
 }
 
-/* global_grim_reaper:
+/* global_gluttony_reaper:
 *	Kills all philosophers if each one has eaten enough. Each philosopher
 *	process decrements the sem_philo_full semaphore. This thread registers
 *	those decrementations to count how many philosophers have eaten enough.
+*	If all philos have eaten enough, kills all philos to end simulation.
 */
 void	*global_gluttony_reaper(void *data)
 {
@@ -66,7 +67,8 @@ void	*global_gluttony_reaper(void *data)
 /* global_famine_reaper:
 *	Kills all philosophers if one has died. Each philosopher
 *	process decrements the sem_philo_dead semaphore upon philo death.
-*	This thread registers the first decrementation and kills all philos.
+*	This thread registers the first decrementation and kills all philos
+*	immediately.
 */
 void	*global_famine_reaper(void *data)
 {
@@ -91,9 +93,10 @@ void	*global_famine_reaper(void *data)
 
 /* end_condition_reached:
 *	Checks this philosopher to see if one of two end conditions
-*	has been reached. Exits the process with a specific exit code
-*	if the philosopher has died. If the philosopher has eaten enough,
-*	marks it by decrementing a semaphore.
+*	has been reached. If the philosopher has died, decrements a semaphore
+*	that will trigger "famine reaper" to kill all philos.
+*	If the philosopher has eaten enough, decrements a semaphore that
+*	will trigger "gluttony_reaper" to increase philo_full_count.
 *	Returns false if the philosopher is alive.
 */
 static bool	end_condition_reached(t_table *table, t_philo *philo)
@@ -118,8 +121,7 @@ static bool	end_condition_reached(t_table *table, t_philo *philo)
 
 /* personal_grim_reaper:
 *	The grim reaper thread's routine. Checks if this philosopher must
-*	be killed and if he ate enough. If the philosopher is dead,
-*	terminate the philosopher process with the appropriate exit code.
+*	be killed and if he ate enough.
 */
 void	*personal_grim_reaper(void *data)
 {
