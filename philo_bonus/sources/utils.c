@@ -6,7 +6,7 @@
 /*   By: mcombeau <mcombeau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/03 15:39:39 by mcombeau          #+#    #+#             */
-/*   Updated: 2022/09/11 13:51:30 by mcombeau         ###   ########.fr       */
+/*   Updated: 2022/09/24 11:28:49 by mcombeau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,6 +55,8 @@ char	*ft_utoa(unsigned int nb, size_t len)
 	char	*ret;
 
 	ret = malloc(sizeof * ret * (len + 1));
+	if (!ret)
+		return (NULL);
 	ret[len] = '\0';
 	len--;
 	while (nb % 10)
