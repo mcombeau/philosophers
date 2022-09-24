@@ -20,7 +20,7 @@ Philosophers is a 42 school project designed around Edsger Dijkstra's famous din
 
 ## Status 
 
-Awaiting evaluation.
+Finished 24/11/2022. Grade: 125%.
 
 ## General Description
 
