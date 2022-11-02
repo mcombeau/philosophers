@@ -6,18 +6,6 @@
 
 Philosophers is a 42 school project designed around Edsger Dijkstra's famous dining philosophers problem. For this project, we must learn about concurrent programming. For the project's mandatory part, we must find a solution to the problem using only threads and mutexes. For the bonus part, we must create a second program that uses processes and semaphores.
 
----
-
-:us: Read my articles in English about this project:
-* [Philosophers 01: Threads and Mutexes](https://www.codequoi.com/en/philosophers-01-threads-and-mutexes/)
-* [Philosophers 02: Processes and Semaphores](https://www.codequoi.com/en/philosophers-02-processes-and-semaphores/)
-
-:fr: Lire mes articles en français sur ce projet :
-* [Philosophers 01 : threads et mutex](https://www.codequoi.com/philosophers-01-threads-et-mutex/)
-* [Philosophers 02 : processus et sémaphores](https://www.codequoi.com/philosophers-02-processus-et-semaphores/)
-
----
-
 ## Status 
 
 Finished 24/09/2022. Grade: 125%.
@@ -115,6 +103,14 @@ Like the mandatory part, the arguments must be integers between 0 and INT_MAX re
 ```
 
 If the arguments are valid, the program will output the actions of each philosopher until one of them dies or until all of them have eaten number_of_times_each_philo_must_eat, if specified.
+
+---
+
+:us: Read my articles in English about the concepts tackled in this project:
+* [Threads, Mutexes and Concurrent Programming in C](https://www.codequoi.com/en/threads-mutexes-and-concurrent-programming-in-c/)
+
+:fr: Lire mes articles en français sur les concepts abordés dans ce projet :
+* [Threads, mutex et programmation concurrente en C](https://www.codequoi.com/threads-mutex-et-programmation-concurrente-en-c/)
 
 ---
 Made by mcombeau: mcombeau@student.42.fr | LinkedIn: [mcombeau](https://www.linkedin.com/in/mia-combeau-86653420b/) | Website: [codequoi.com](https://www.codequoi.com)
