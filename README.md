@@ -12,7 +12,7 @@ Finished 24/09/2022. Grade: 125%.
 
 ## General Description
 
-The [subject](https://github.com/mcombeau/philosophers/blob/main/subject/philosophers.en.subject.pdf) describes the problem as follows:
+The subject describes the problem as follows:
 
 * One or more philosophers sit at a round table.
 * There is a large bowl of spaghetti in the middle of the table.
@@ -44,8 +44,6 @@ The programs outputs a message each time a philosopher takes an action, which is
 
 In the mandatory part, each philosopher is a thread and each fork is protected by a mutex. There is exactly one fork between each philosopher and a philosopher must take the forks to his immediate left and right in order to eat.
 
-<a href="https://www.codequoi.com/en/philosophers-01-threads-and-mutexes/"><img src="https://github.com/mcombeau/philosophers/blob/main/subject/philosophers.png" alt="Philosopher mandatory part illustration by mcombeau" style="width:500px;"/></a>
-
 ### Usage
 
 Git clone the project and for the mandatory part:
@@ -75,8 +73,6 @@ If the arguments are valid, the program will output the actions of each philosop
 ## Bonus Part - Processes and Semaphores
 
 For the bonus part of this project, the problem is the same with a few differences: philosophers are now processes and the forks are now a counting semaphore. The forks are arranged at the center of the table when not in use and any philosopher can take any fork.
-
-<a href="https://www.codequoi.com/en/philosophers-01-threads-and-mutexes/"><img src="https://github.com/mcombeau/philosophers/blob/main/subject/philosophers-bonus.png" alt="Philosopher bonus part illustration by mcombeau" style="width:500px;"/></a>
 
 ### Usage
 
