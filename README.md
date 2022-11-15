@@ -8,13 +8,11 @@ Philosophers is a 42 school project designed around Edsger Dijkstra's famous din
 
 ---
 
-:us: Read my articles in English about this project:
-* [Philosophers 01: Threads and Mutexes](https://www.codequoi.com/en/philosophers-01-threads-and-mutexes/)
-* [Philosophers 02: Processes and Semaphores](https://www.codequoi.com/en/philosophers-02-processes-and-semaphores/)
+:us: Read my articles in English about the concepts tackled in this project:
+* [Threads, Mutexes and Concurrent Programming in C](https://www.codequoi.com/en/threads-mutexes-and-concurrent-programming-in-c/)
 
-:fr: Lire mes articles en français sur ce projet :
-* [Philosophers 01 : threads et mutex](https://www.codequoi.com/philosophers-01-threads-et-mutex/)
-* [Philosophers 02 : processus et sémaphores](https://www.codequoi.com/philosophers-02-processus-et-semaphores/)
+:fr: Lire mes articles en français sur les concepts abordés dans ce projet :
+* [Threads, mutex et programmation concurrente en C](https://www.codequoi.com/threads-mutex-et-programmation-concurrente-en-c/)
 
 ---
 
@@ -24,7 +22,7 @@ Finished 24/09/2022. Grade: 125%.
 
 ## General Description
 
-The [subject](https://github.com/mcombeau/philosophers/blob/main/subject/philosophers.en.subject.pdf) describes the problem as follows:
+The subject describes the problem as follows:
 
 * One or more philosophers sit at a round table.
 * There is a large bowl of spaghetti in the middle of the table.
@@ -56,8 +54,6 @@ The programs outputs a message each time a philosopher takes an action, which is
 
 In the mandatory part, each philosopher is a thread and each fork is protected by a mutex. There is exactly one fork between each philosopher and a philosopher must take the forks to his immediate left and right in order to eat.
 
-<a href="https://www.codequoi.com/en/philosophers-01-threads-and-mutexes/"><img src="https://github.com/mcombeau/philosophers/blob/main/subject/philosophers.png" alt="Philosopher mandatory part illustration by mcombeau" style="width:500px;"/></a>
-
 ### Usage
 
 Git clone the project and for the mandatory part:
@@ -87,8 +83,6 @@ If the arguments are valid, the program will output the actions of each philosop
 ## Bonus Part - Processes and Semaphores
 
 For the bonus part of this project, the problem is the same with a few differences: philosophers are now processes and the forks are now a counting semaphore. The forks are arranged at the center of the table when not in use and any philosopher can take any fork.
-
-<a href="https://www.codequoi.com/en/philosophers-01-threads-and-mutexes/"><img src="https://github.com/mcombeau/philosophers/blob/main/subject/philosophers-bonus.png" alt="Philosopher bonus part illustration by mcombeau" style="width:500px;"/></a>
 
 ### Usage
 
