@@ -6,7 +6,7 @@
 /*   By: mcombeau <mcombeau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/03 11:35:04 by mcombeau          #+#    #+#             */
-/*   Updated: 2022/08/09 23:24:47 by mcombeau         ###   ########.fr       */
+/*   Updated: 2022/11/15 15:49:54 by mcombeau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,11 +50,10 @@ static pthread_mutex_t	*init_forks(t_table *table)
 *	Making even id philos "left-handed" helps:
 *		Philo #1 (id: 0) takes fork 1 and then fork 0
 *		Philo #2 (id: 1) takes fork 1 and then fork 2
-*		Philo #3 (id: 2) takes fork 2 and then fork 0
-*	Now, philo #1 takes fork 1, philo #3 takes fork 2 and philo #2 waits patiently.
-*	Fork 0 is free for philo #1 to take, so he eats. When he is done philo #2 can
-*	take fork 1 but must wait for philo #3 to take fork 0 and eat before fork 2
-*	becomes available, at which time philo #2 can eat.
+*		Philo #3 (id: 2) takes fork 0 and then fork 2
+*	Now, philo #1 takes fork 1, philo #3 takes fork 0 and philo #2 waits patiently.
+*	Fork 2 is free for philo #3 to take, so he eats. When he is done philo #1 can
+*	take fork 0 and eat. When he is done, philo #2 can finally get fork 1 and eat.
 */
 static void	assign_forks(t_philo *philo)
 {
